@@ -1,0 +1,33 @@
+<%- include("../partials/header.ejs")%>
+    <div class=" container">
+      <div class="course-header">
+        <h3>All courses</h3>
+        <a href="/addCourse" class="btn btn-primary">Add Course</a>
+      </div>
+    <div class="table-container">
+    <table class="course-table table table-primary table-striped text-center">
+        <thead>
+          <tr>
+            <th scope="col">Subject</th>
+            <th scope="col">Class</th>
+            <th scope="col">View</th>
+          </tr>
+        </thead>
+        <tbody>
+        <% for(var i=0;i<display.length;i++) { %>  
+          <tr>
+            <td><%= display[i].subject %></td>
+            <td><%= display[i].class %></td>
+            <td><form action="/editCourseInitiate" method="POST">
+              <input type="hidden" id="id" name="id" value="<%= display[i].id %>">
+              <div class="button-submit"> 
+                <button type="submit" class="btn btn-success" id="percentage-btn">Edit</button> 
+              </div>
+          </form> </td>
+          </tr>
+        <% } %>
+        </tbody>
+      </table>
+    </div>
+    </div>
+<%- include("../partials/footer.ejs")%>
