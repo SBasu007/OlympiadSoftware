@@ -118,16 +118,13 @@ function postDate() {
                 <table>
                     <thead>
                         <tr>
-                            <th class="expand">Name of the Student</th>
+                            <th class="expand">Student Name</th>
                             <th>Roll No.</th>
-                            <th>Year</th>
+                            <th>Subject</th>
                             <th class="expand">Guardian's Name</th>
-                            <th>PR-I</th>
-                            <th>PR-II</th>
-                            <th>TR-I</th>
-                            <th>TR-II</th>
-                            <th>TOTAL</th>
-                            <th>DIV</th>
+                            <th>Marks</th>
+                            <th>Class Rank</th>
+                            <th>State Rank</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -136,26 +133,12 @@ function postDate() {
         <tr>
             <td class="expand"><%= row.student_name %></td>
             <td><%= row.roll %></td>
-            <td class="year"><%= row.year %></td>
+            <td class="year"><%= row.subject %></td>
             <td class="expand"><%= row.guard_name %></td>
-            <td><%= row.prac_1 %></td>
-            <td><%= row.prac_2 %></td>
-            <td><%= row.theory_1 %></td>
-            <td><%= row.theory_2 %></td>
-            <td><%= row.prac_1+row.prac_2+row.theory_1+row.theory_2%></td>
-            <td>
-                <% if (row.div >= 80) { %>
-                    Distinction
-                <% } else if (row.div >= 60) { %>
-                    1st
-                <% } else if (row.div >= 50) { %>
-                    2nd
-                <% } else if (row.div >= 40) { %>
-                    Pass
-                <% } else { %>
-                    Fail
-                <% } %>
-            </td>
+            <td><%= row.marks %></td>
+            <td><%= row.subject_rank %></td>
+            <td>lmao</td>
+            
         </tr>
     
         <% if ((index + 1) % rowsPerPage === 0 || index === rows.length - 1) { %>

@@ -8,47 +8,48 @@
     <style>
         /* Set the paper size using cm */
         @page {
-            size: 23cm 10.2cm;
+            size: 20.3cm 10.2cm;
             margin: 0;
         }
 
         .text1 {
             position: absolute;
-            top: 9.2cm; 
-            left: 11.8cm;
+            top: 3.4cm; 
+            left: 4.2cm;
         }
          .text2 {
             position: absolute;
-            top: 10.1cm; 
-            left: 14cm;
+            top: 3.4cm; 
+            left: 13cm;
         }
         .text3 {
             position: absolute;
-            top: 10.85cm; 
-            left: 23.5cm;
+            top: 4.5cm; 
+            left: 4.2cm;
             
         }
         .text4 {
             position: absolute;
-            top: 11.8cm; 
-            left: 13.5cm;
+            top: 5.5cm; 
+            left: 4.2cm;
         }
         
         .text5 {
             position: absolute;
-            top: 12.6cm; 
-            left:15cm;
+            top: 6.5cm; 
+            left: 4.2cm;
         }
         .text6 {
             position: absolute;
-            top: 13.1cm; 
-            left:15cm;
+            top: 7.5cm; 
+            left: 4.2cm;
         }
         .text7 {
             position: absolute;
-            top: 13.6cm; 
-            left:15cm;
-        } *
+            top: 8.5cm; 
+            left: 4.2cm;
+        }
+        
         .font{
             width:max-content;
             height: max-content;
@@ -143,13 +144,13 @@
     function loadAndPrintDocument() {
         if (currentDocIndex < students.length) {
             // Load content from the current document
-            document.getElementById('text-content1').textContent = students[currentDocIndex].name.toUpperCase();
-            document.getElementById('text-content2').textContent = students[currentDocIndex].roll;
-            document.getElementById('text-content3').textContent = students[currentDocIndex].session;
-            document.getElementById('text-content4').textContent = students[currentDocIndex].year;
-            document.getElementById('text-content5').textContent = students[currentDocIndex].school_name.toUpperCase();
-            document.getElementById('text-content6').textContent = students[currentDocIndex].school_address_line1.toUpperCase();
-            document.getElementById('text-content7').textContent = students[currentDocIndex].school_address_line2.toUpperCase();
+            document.getElementById('text-content1').textContent = "Subject - " + students[currentDocIndex].subject;
+            document.getElementById('text-content2').textContent = "Roll - " + students[currentDocIndex].roll;
+            document.getElementById('text-content3').textContent = "Name - " + students[currentDocIndex].name;
+            document.getElementById('text-content4').textContent = "Guardian Name - " + students[currentDocIndex].guard_name;
+            document.getElementById('text-content6').textContent = "School Name - " + students[currentDocIndex].school_name;
+            document.getElementById('text-content5').textContent = "School Code - " + students[currentDocIndex].school_code;
+            document.getElementById('text-content7').textContent =  "Center Address - "+students[currentDocIndex].school_address_line1;
 
             // Open print dialog and wait for the user to finish printing
             setTimeout(() => {

@@ -7,69 +7,74 @@
     <style>
         /* Set the paper size using cm */
         @page {
-            size: 25.50cm 15.23cm;
+            size: 20.30cm 15.24cm;
             margin: 0;
         }
 
         .text1 {
             position: absolute;
-            top: 8cm; 
-            left: 12.5cm;
+            top: 5.2cm; 
+            left: 1.6cm;
         }
         .text2 {
             position: absolute;
-            top: 8.8cm; 
-            left: 12.5cm;
+            top: 5.9cm; 
+            left: 1.6cm;
         }
         .text3 {
             position: absolute;
-            top: 9.65cm; 
-            left: 12.5cm;
+            top: 6.5cm; 
+            left: 1.6cm;
             
         }
         .text4 {
             position: absolute;
-            top: 9.6cm; 
-            left: 23.5cm;
+            top: 6.5cm; 
+            left: 6.8cm;
         }
         .text5 {
             position: absolute;
-            top: 10.55cm; 
-            left: 19cm;
+            top: 7.2cm; 
+            left: 1.6cm;
         }
         .text6 {
             position: absolute;
-            top: 14.9cm; 
-            left:12.5cm;
+            top: 7.8cm; 
+            left: 1.6cm;
         }
         .text7 {
             position: absolute;
-            top: 14.9cm; 
-            left:14.7cm;
+            top: 8.5cm; 
+            left: 1.6cm;
         }
         .text8 {
             position: absolute;
-            top: 14.9cm; 
-            left:16.85cm;
+            top: 9.5cm; 
+            left:7cm;
         }
         .text9 {
             position: absolute;
-            top: 14.9cm; 
-            left:19.1cm;
+            top: 10.2cm; 
+            left:3.2cm;
         }
         .text10 {
             position: absolute;
-            top: 14.9cm; 
-            left:21.6cm;
+            top: 10.2cm; 
+            left:7.4cm;
         }
         .text11 {
             position: absolute;
-            top: 14.9cm; 
-            left:24.5cm;
+            top: 10.2cm; 
+            left:11.8cm;
         }
         .text12 {
             position: absolute;
-            top: 16.1cm; 
+            top: 10.9cm; 
+            left:6.2cm;
+        }
+        .text13 {
+            position: absolute;
+            top: 10.9cm; 
             left:10cm;
         }
         .font{
@@ -125,6 +130,7 @@
     <div class="text10 font" id="text-content10" ></div>
     <div class="text11 font" id="text-content11" ></div>
     <div class="text12 font" id="text-content12" ></div>
+    <div class="text13 font" id="text-content13" ></div>
 
     <!-- Custom Modal Dialog -->
     <div id="myModal" class="modal">
@@ -172,31 +178,32 @@
         if (currentDocIndex < students.length) {
             // Load content from the current document
         // Student data
-        document.getElementById('text-content1').textContent = students[currentDocIndex].name.toUpperCase();
-        document.getElementById('text-content2').textContent = students[currentDocIndex].school_name.toUpperCase();
-        document.getElementById('text-content3').textContent = students[currentDocIndex].roll;
-        document.getElementById('text-content4').textContent = students[currentDocIndex].year;
-        document.getElementById('text-content5').textContent = students[currentDocIndex].session;
-        document.getElementById('text-content8').textContent = students[currentDocIndex].theory_1;
-        document.getElementById('text-content9').textContent = students[currentDocIndex].theory_2;
-        document.getElementById('text-content6').textContent = students[currentDocIndex].prac_1;
-        document.getElementById('text-content7').textContent = students[currentDocIndex].prac_2;
-        // Calculating total marks for theory and practical
-        const totalMarks = 
-                parseInt(students[currentDocIndex].theory_1) + 
-                parseInt(students[currentDocIndex].theory_2) + 
-                parseInt(students[currentDocIndex].prac_1) + 
-                parseInt(students[currentDocIndex].prac_2);
-        document.getElementById('text-content10').textContent = totalMarks;  // Sum of theory and practical marks
-        document.getElementById('text-content11').textContent = students[currentDocIndex].division;
+        document.getElementById('text-content1').textContent = "This is to certify that "+students[currentDocIndex].name;
+        document.getElementById('text-content2').textContent = "Son/Daughter of Mr/Ms "+students[currentDocIndex].guard_name;
+        document.getElementById('text-content3').textContent = "Class : "+students[currentDocIndex].subject.match(/(\d+)/)[0];
+        document.getElementById('text-content4').textContent = "Roll no. : "+students[currentDocIndex].roll;
+        document.getElementById('text-content5').textContent = "School : "+students[currentDocIndex].school_name;
+        document.getElementById('text-content8').textContent = "Student Performance Report"
+        document.getElementById('text-content9').textContent = "Total Marks - "+((students[currentDocIndex].subject.match(/(\d+)/)[0]<=2)?"200":"100");
+        document.getElementById('text-content6').textContent = "Participated in : Talent Search "+students[currentDocIndex].subject.replace(/[0-9]/g, "")+" Olympiad, Level "+students[currentDocIndex].subject.match(/(\d+)/)[0];
+        document.getElementById('text-content7').textContent = "Held in : x to y";
+        var cl = students[currentDocIndex].subject.match(/(\d+)/)[0];
+        let p
+        if (cl <= 2){
+            p = students[currentDocIndex].marks * 0.5; 
+        }else{
+            p = students[currentDocIndex].marks;
+        }
+        document.getElementById('text-content10').textContent = "Marks Scored - "+students[currentDocIndex].marks;
+        document.getElementById('text-content11').textContent = "Percentile Score - "+p+"%";
         // Current date
         function postDate() {
             const d = new Date();
             let date = d.getDate() + "." + (d.getMonth() + 1) + "." + d.getFullYear();
             return date;
             };  // Format date as MM/DD/YYYY
-        document.getElementById('text-content12').textContent = postDate();
-                    
+        document.getElementById('text-content12').textContent = "Class Rank - "+students[currentDocIndex].subject_school_rank;
+        document.getElementById('text-content13').textContent = "State Rank - "+students[currentDocIndex].subject_overall_rank;            
 
             // Open print dialog and wait for the user to finish printing
             setTimeout(() => {

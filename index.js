@@ -690,12 +690,13 @@ app.post("/printAdmit", async(req,res)=>{
       SELECT s.*, 
        sch.name AS school_name, 
        sch.add1 AS school_address_line1, 
-       sch.add2 AS school_address_line2
+       sch.code AS school_code
 FROM student s
 JOIN school sch ON s.center_num = sch.code
 WHERE s.roll >= $1 AND s.roll <= $2
 ORDER BY s.roll;
     `;
+    console.log(result.rows)
 
     // Execute the query, using parameterized inputs to prevent SQL injection
     const result = await db.query(query, [start_roll, end_roll+'Z']);
@@ -714,13 +715,13 @@ app.post("/printAdmitLaser", async(req,res)=>{
     // Query to fetch students within the roll range
     const query = `
       SELECT s.*, 
-       sch.name AS school_name, 
-       sch.add1 AS school_address_line1, 
-       sch.add2 AS school_address_line2
-FROM student s
-JOIN school sch ON s.center_num = sch.code
-WHERE s.roll >= $1 AND s.roll <= $2;
-    `;
+       sch.name AS school_name,
+       sch.add1 AS school_address_line1,  
+       sch.code AS school_code
+      FROM student s
+      JOIN school sch ON s.center_num = sch.code
+      WHERE s.roll >= $1 AND s.roll <= $2;
+          `;
 
     // Execute the query, using parameterized inputs to prevent SQL injection
     const result = await db.query(query, [m_start_roll, m_end_roll+'Z']);
@@ -780,25 +781,44 @@ app.post("/printMarksheetLaser", async (req, res) => {
   try {
     // Query to fetch students within the roll range along with their marks and school info
     const query = `
-      SELECT s.roll,
-             s.name,
-             s.session,
-             s.year,
-             sch.name AS school_name,
-             m.theory_1,
-             m.theory_2,
-             m.prac_1,
-             m.prac_2,
-             m.division
-      FROM student s
-      JOIN school sch ON s.center_num = sch.code
-      JOIN marks m ON s.roll = m.roll
-      WHERE s.roll >= $1 AND s.roll <= $2;
+     WITH ranked_students AS (
+    SELECT 
+        s.roll,
+        s.name,
+        s.guard_name,
+        s.session,
+        s.subject,
+        sch.name AS school_name,
+        m.marks,
+
+        -- Rank within the same subject and school
+        DENSE_RANK() OVER (
+            PARTITION BY s.subject, s.center_num  
+            ORDER BY m.marks DESC
+        ) AS subject_school_rank,
+
+        -- Rank across all schools for a particular subject
+        DENSE_RANK() OVER (
+            PARTITION BY s.subject
+            ORDER BY m.marks DESC
+        ) AS subject_overall_rank
+
+    FROM 
+        student s
+    JOIN 
+        school sch ON s.center_num = sch.code
+    JOIN 
+        marks m ON s.roll = m.roll
+)
+SELECT * FROM ranked_students
+WHERE roll BETWEEN $1 AND $2
+ORDER BY 
+    SUBSTRING(roll FROM '([0-9]+)')::BIGINT ASC;
+
     `;
 
     // Execute the query with parameterized inputs to prevent SQL injection
     const result = await db.query(query, [m_start_roll, m_end_roll + 'Z']);
-    
     // Send the result rows back in the response, rendering the marksheet template
     res.render("./reports/marksheet/marksheetPrintLaser.ejs", { display: result.rows });
   } catch (error) {
@@ -988,7 +1008,7 @@ app.post("/printAttendanceSheet", async(req,res) => {
     school.name AS school_name,
     student.name AS student_name, 
     student.roll,
-    student.year,
+    student.subject,
 	student.guard_name
 FROM 
     student
@@ -1001,8 +1021,8 @@ WHERE
 AND 
     student.center_num = $2
 GROUP BY 
-    school.name, student.name, student.roll, student.year
-ORDER BY student.year, SUBSTRING(student.roll FROM '([0-9]+)')::BIGINT ASC, student.roll;
+    school.name, student.name, student.roll, student.subject
+ORDER BY student.subject, SUBSTRING(student.roll FROM '([0-9]+)')::BIGINT ASC, student.roll;
 
   `;
 
@@ -1032,29 +1052,28 @@ app.post("/printResultSheet", async(req,res) => {
     school.name AS school_name,
     student.name AS student_name, 
     student.roll,
-    student.year,
+    student.subject,
     student.guard_name,
-    marks.theory_1,
-    marks.theory_2,
-    marks.prac_1,
-    marks.prac_2,
-    marks.div,
-    marks.division
+    marks.marks,
+    DENSE_RANK() OVER (
+        PARTITION BY student.subject, student.center_num  -- Ranking within each subject and school
+        ORDER BY marks.marks DESC
+    ) AS subject_rank
 FROM 
     student
 JOIN 
     school ON student.center_num = school.code
 JOIN 
-    marks ON student.roll = marks.roll -- Join with the marks table
+    marks ON student.roll = marks.roll  -- Join with the marks table
 WHERE 
     student.session = $1
 AND 
     student.center_num = $2
-GROUP BY 
-    school.name, student.name, student.roll, student.year,
-    marks.theory_1, marks.theory_2, marks.prac_1, marks.prac_2,
-    marks.div, marks.division
-ORDER BY student.year, SUBSTRING(student.roll FROM '([0-9]+)')::BIGINT ASC, student.roll;
+ORDER BY 
+    student.subject, 
+    subject_rank,  -- Order by rank within each subject
+    SUBSTRING(student.roll FROM '([0-9]+)')::BIGINT ASC, 
+    student.roll;
 
   `;
 
