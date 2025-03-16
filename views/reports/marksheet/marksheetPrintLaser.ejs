@@ -7,80 +7,87 @@
     <style>
         /* Set the paper size using cm */
         @page {
-            size: 20.30cm 15.24cm;
+            size: 20.30cm 20cm;
             margin: 0;
         }
 
         .text1 {
-            position: absolute;
-            top: 5.2cm; 
-            left: 1.6cm;
-        }
-        .text2 {
-            position: absolute;
-            top: 5.9cm; 
-            left: 1.6cm;
-        }
-        .text3 {
-            position: absolute;
-            top: 6.5cm; 
-            left: 1.6cm;
-            
-        }
-        .text4 {
-            position: absolute;
-            top: 6.5cm; 
-            left: 6.8cm;
-        }
-        .text5 {
-            position: absolute;
-            top: 7.2cm; 
-            left: 1.6cm;
-        }
-        .text6 {
-            position: absolute;
-            top: 7.8cm; 
-            left: 1.6cm;
-        }
-        .text7 {
-            position: absolute;
-            top: 8.5cm; 
-            left: 1.6cm;
-        }
+    position: absolute;
+    top: 5.2cm; 
+    left: 1.6cm;
+}
+.text2 {
+    position: absolute;
+    top: 6cm; /* Increased by 0.1cm more */
+    left: 1.6cm;
+}
+.text3 {
+    position: absolute;
+    top: 6.9cm; /* Increased by 0.1cm more */
+    left: 1.6cm;
+}
+.text4 {
+    position: absolute;
+    top: 6.9cm; /* Matches .text3 to maintain box levels */
+    left: 6.8cm;
+}
+.text5 {
+    position: absolute;
+    top: 7.9cm; /* Increased by 0.1cm */
+    left: 1.6cm;
+}
+.text6 {
+    position: absolute;
+    top: 8.8cm; /* Increased by 0.1cm */
+    left: 1.6cm;
+}
+.text7 {
+    position: absolute;
+    top: 9.8cm; /* Increased by 0.1cm */
+    left: 1.6cm;
+}
+
         .text8 {
             position: absolute;
-            top: 9.5cm; 
+            top: 11cm; 
             left:7cm;
+            font-weight: bold;
         }
         .text9 {
             position: absolute;
-            top: 10.2cm; 
+            top: 11.7cm; 
             left:3.2cm;
         }
         .text10 {
             position: absolute;
-            top: 10.2cm; 
+            top: 11.7cm; 
             left:7.4cm;
         }
         .text11 {
             position: absolute;
-            top: 10.2cm; 
+            top: 11.7cm; 
             left:11.8cm;
         }
         .text12 {
             position: absolute;
-            top: 10.9cm; 
+            top: 12.4cm; 
             left:6.2cm;
         }
         .text13 {
             position: absolute;
-            top: 10.9cm; 
+            top: 12.4cm; 
             left:10cm;
+        }
+        .text14 {
+            position: absolute;
+            top: 14cm; 
+            left:1.6cm;
         }
         .font{
             width:max-content;
             height: max-content;
             font-family: Arial, Helvetica, sans-serif;
+            font-size: 17px;
         }
         /* Modal styling */
         .modal {
@@ -131,6 +138,7 @@
     <div class="text11 font" id="text-content11" ></div>
     <div class="text12 font" id="text-content12" ></div>
     <div class="text13 font" id="text-content13" ></div>
+    <div class="text14 font" id="text-content14" ></div>
 
     <!-- Custom Modal Dialog -->
     <div id="myModal" class="modal">
@@ -178,15 +186,15 @@
         if (currentDocIndex < students.length) {
             // Load content from the current document
         // Student data
-        document.getElementById('text-content1').textContent = "This is to certify that "+students[currentDocIndex].name;
-        document.getElementById('text-content2').textContent = "Son/Daughter of Mr/Ms "+students[currentDocIndex].guard_name;
+        document.getElementById('text-content1').textContent = "This is to certify that : "+students[currentDocIndex].name;
+        document.getElementById('text-content2').textContent = "Son/Daughter of Mr/Ms : "+students[currentDocIndex].guard_name;
         document.getElementById('text-content3').textContent = "Class : "+students[currentDocIndex].subject.match(/(\d+)/)[0];
         document.getElementById('text-content4').textContent = "Roll no. : "+students[currentDocIndex].roll;
         document.getElementById('text-content5').textContent = "School : "+students[currentDocIndex].school_name;
         document.getElementById('text-content8').textContent = "Student Performance Report"
         document.getElementById('text-content9').textContent = "Total Marks - "+((students[currentDocIndex].subject.match(/(\d+)/)[0]<=2)?"200":"100");
         document.getElementById('text-content6').textContent = "Participated in : Talent Search "+students[currentDocIndex].subject.replace(/[0-9]/g, "")+" Olympiad, Level "+students[currentDocIndex].subject.match(/(\d+)/)[0];
-        document.getElementById('text-content7').textContent = "Held in : x to y";
+        document.getElementById('text-content7').textContent = "Held in : West Bengal";
         var cl = students[currentDocIndex].subject.match(/(\d+)/)[0];
         let p
         if (cl <= 2){
@@ -204,7 +212,7 @@
             };  // Format date as MM/DD/YYYY
         document.getElementById('text-content12').textContent = "Class Rank - "+students[currentDocIndex].subject_school_rank;
         document.getElementById('text-content13').textContent = "State Rank - "+students[currentDocIndex].subject_overall_rank;            
-
+        document.getElementById('text-content14').textContent = "Date - "+ postDate();            
             // Open print dialog and wait for the user to finish printing
             setTimeout(() => {
                 window.print();

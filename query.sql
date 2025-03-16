@@ -44,5 +44,6 @@ CREATE TABLE student (
 CREATE TABLE marks (
     id SERIAL PRIMARY KEY,
     roll TEXT REFERENCES student(roll),
-    marks INTEGER
+    marks INTEGER,
+    percentage FLOAT
 )

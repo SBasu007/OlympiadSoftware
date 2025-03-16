@@ -43,7 +43,7 @@ function postDate() {
             text-align: left;
         }
         td {
-            padding: 11px 8px !important;
+            padding: 5px 8px !important;
             font-size: 14px;
         }
         .year {
@@ -89,13 +89,26 @@ function postDate() {
         <div class="content">
             <p><strong>Name of School:</strong> <%= school.toUpperCase() %></p>
             <p><strong>Centre Code:</strong> <%= code %></p>
-            <p><strong>Total No. of students:</strong> <%= rows[0].total_students_in_school %></p>
-
-            <p><strong>DISTINCTION:</strong> <%= rows.find(row => row.division === 'DISTINCTION') ? rows.find(row => row.division === 'DISTINCTION').students_in_division : 0 %></p>
-<p><strong>1ST DIVISION:</strong> <%= rows.find(row => row.division === '1ST DIVISION') ? rows.find(row => row.division === '1ST DIVISION').students_in_division : 0 %></p>
-<p><strong>2ND DIVISION:</strong> <%= rows.find(row => row.division === '2ND DIVISION') ? rows.find(row => row.division === '2ND DIVISION').students_in_division : 0 %></p>
-<p><strong>PASS:</strong> <%= rows.find(row => row.division === 'PASS') ? rows.find(row => row.division === 'PASS').students_in_division : 0 %></p>
-<p><strong>FAIL:</strong> <%= rows.find(row => row.division === 'FAIL') ? rows.find(row => row.division === 'FAIL').students_in_division : 0 %></p>
+            <p><strong>Total No. of students:</strong> <%= rows[0].total_students %></p>
+            <table >
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Percentage Range</th>
+                        <th>Student Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% rows.forEach(row => { %>
+                        <tr>
+                            <td><%= row.subject %></td>
+                            <td><%= row.percentage_range %></td>
+                            <td><%= row.student_count %></td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+            
 <p><strong>Roll numbers missed during marks entry: </strong>
 <% if (left.length !== 0) { %>
     <% left.forEach((data) => { %>

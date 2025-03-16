@@ -288,7 +288,7 @@ app.get("/editStudent", (req,res) => {
   res.render("./student/editStudent.ejs",{admin:isAdmin})
 }); 
 app.post("/editStudent", async (req, res) => {
-  const { roll, session, year, code, admission_date, name, guard_name, lang, mode } = req.body;
+  const { roll, session, year, code, date, name, guard_name, lang, mode } = req.body;
   const isAdmin = req.session.isAdmin || false;
 
   // SQL query to update student details
@@ -306,7 +306,7 @@ app.post("/editStudent", async (req, res) => {
     WHERE roll = $9`;
 
   try {
-    const result = await db.query(query, [session, year, code, admission_date, name, guard_name, lang, mode, roll]);
+    const result = await db.query(query, [session, year, code, date, name, guard_name, lang, mode, roll]);
 
     // Check if any rows were affected (i.e., if the update was successful)
     if (result.rowCount > 0) {
@@ -464,17 +464,24 @@ app.get("/editMarks", (req,res) => {
 app.post("/editMarks", async (req, res) => {
   const { roll, marks ,year } = req.body;
   const isAdmin = req.session.isAdmin || false;
-  
+  const subjectQuery = await db.query("select * from student where roll = $1",[roll])
+  let p;
+    if (subjectQuery.rows[0].subject.match(/(\d+)/)[0] <= 2){
+      p = marks*0.5
+    }else{
+      p = marks;
+    }
   // SQL query to update marks
   const query = `
     UPDATE marks 
     SET 
      marks = $1
-    WHERE roll = $2`;
+     percentage = $2
+    WHERE roll = $3`;
 
   try {
     // Execute the update query with the marks data
-    const result = await db.query(query, [marks, roll]);
+    const result = await db.query(query, [marks,p, roll]);
 
     // Check if any rows were affected (i.e., if the update was successful)
     if (result.rowCount > 0) {
@@ -556,13 +563,18 @@ app.post("/addMarks", async (req, res) => {
     if (courseResult.rows.length === 0) {
       return res.render('./marks/addMarks.ejs', { error_message: "Course for the given year not found", admin: isAdmin });
     }
-
+    let p;
+    if (studentResult.rows[0].subject.match(/(\d+)/)[0] <= 2){
+      p = marks*0.5
+    }else{
+      p = marks;
+    }
     
     // If the student exists and the marks are valid, insert the marks into the marks table
-    const insertMarksQuery = `INSERT INTO marks (roll,marks)
-                              VALUES ($1, $2)`;
+    const insertMarksQuery = `INSERT INTO marks (roll,marks,percentage)
+                              VALUES ($1, $2,$3)`;
 
-    await db.query(insertMarksQuery, [roll,marks]);
+    await db.query(insertMarksQuery, [roll,marks,p]);
 
     res.render('./marks/addMarks.ejs', { error_message: "Marks added successfully", admin: isAdmin });
   } catch (err) {
@@ -1056,9 +1068,15 @@ app.post("/printResultSheet", async(req,res) => {
     student.guard_name,
     marks.marks,
     DENSE_RANK() OVER (
-        PARTITION BY student.subject, student.center_num  -- Ranking within each subject and school
-        ORDER BY marks.marks DESC
-    ) AS subject_rank
+            PARTITION BY student.subject, student.center_num  
+            ORDER BY marks.marks DESC
+        ) AS subject_school_rank,
+
+        -- Rank across all schools for a particular subject
+        DENSE_RANK() OVER (
+            PARTITION BY student.subject
+            ORDER BY marks.marks DESC
+        ) AS subject_overall_rank
 FROM 
     student
 JOIN 
@@ -1071,7 +1089,7 @@ AND
     student.center_num = $2
 ORDER BY 
     student.subject, 
-    subject_rank,  -- Order by rank within each subject
+    subject_school_rank,  -- Order by rank within each subject
     SUBSTRING(student.roll FROM '([0-9]+)')::BIGINT ASC, 
     student.roll;
 
@@ -1199,23 +1217,22 @@ app.post("/printResultSummary", async(req,res) => {
   const query = `
    -- Get the number of students in each division from a specific school and session
 SELECT 
-    marks.division,
-    COUNT(*) AS students_in_division,
-    (SELECT COUNT(*) 
-     FROM marks 
-     JOIN student ON marks.roll = student.roll 
-     WHERE student.center_num = $1 
-     AND student.session = $2) AS total_students_in_school
-FROM 
-    marks
-JOIN 
-    student ON marks.roll = student.roll
-WHERE 
-    student.center_num = $1 
-AND 
-    student.session = $2
-GROUP BY 
-    marks.division;
+    student.subject,
+    CASE
+        WHEN marks.percentage BETWEEN 0 AND 30 THEN '0-30%' 
+        WHEN marks.percentage BETWEEN 31 AND 50 THEN '31-50%'
+        WHEN marks.percentage BETWEEN 51 AND 80 THEN '51-80%'
+        WHEN marks.percentage BETWEEN 81 AND 90 THEN '81-90%'
+        WHEN marks.percentage BETWEEN 91 AND 100 THEN '91-100%'
+    END AS percentage_range,
+    COUNT(*) AS student_count,
+    SUM(COUNT(*)) OVER () AS total_students
+FROM marks
+JOIN student ON marks.roll = student.roll
+WHERE student.center_num = $1  -- Replace $1 with the school code
+AND student.session = $2        -- Replace $2 with the session
+GROUP BY student.subject, percentage_range
+ORDER BY student.subject, percentage_range;
 
   `;
 
