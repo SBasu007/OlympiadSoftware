@@ -38,7 +38,7 @@ CREATE TABLE student (
 	name VARCHAR(200),
 	guard_name VARCHAR(200),
     stream TEXT,
-    mode BOOLEAN
+    mode TEXT
 );
 
 CREATE TABLE marks (

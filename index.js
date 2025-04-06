@@ -2,7 +2,8 @@ import express from "express";
 import bodyParser from "body-parser";
 import pg from "pg";
 import session from "express-session";
-
+import open from 'open';
+open('http://localhost:3000/');
 const app = express();
 
 const port = 3000;
