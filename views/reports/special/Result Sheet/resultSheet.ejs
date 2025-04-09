@@ -58,7 +58,7 @@ function postDate() {
 
         th, td {
             padding: 8px;
-            text-align: left;
+            text-align: center;
         }
         td{
             padding:8px 8px !important;
@@ -123,8 +123,9 @@ function postDate() {
                             <th>Subject</th>
                             <th class="expand">Guardian's Name</th>
                             <th>Marks</th>
-                            <th>Class Rank</th>
-                            <th>State Rank</th>
+                            <th>Class</th>
+                            <th>District</th>
+                            <th>State</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -137,6 +138,7 @@ function postDate() {
             <td class="expand"><%= row.guard_name %></td>
             <td><%= row.marks %></td>
             <td><%= row.subject_school_rank %></td>
+            <td><%= row.subject_district_rank %></td>
             <td><%= row.subject_overall_rank %></td>
             
         </tr>

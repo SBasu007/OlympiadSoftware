@@ -72,7 +72,12 @@
           </select>
         </div>
       </div>
-      
+      <div class="form-row">
+        <div class="form-row-element">
+          <label class="student-label" for="district">DISTRICT</label>
+          <input type="text" class="student-input" id="district" name="district" required>
+        </div>
+      </div>
       <hr>
       <div class="form-row">
         <div class="form-row-element">
@@ -141,6 +146,7 @@
           document.getElementById('date').value = student.admission_date;
           document.getElementById('lang').value = student.stream;
           document.getElementById('mode').value = student.mode;
+          document.getElementById('district').value = student.district;
 
 
           // Center details in the divs
@@ -178,6 +184,7 @@
     document.getElementById('date').value = '';
     document.getElementById('lang').value = '';
     document.getElementById('mode').value = '';
+    document.getElementById('district').value = '';
     document.querySelector('.center-name').textContent = '';
     document.querySelector('.center-add1').textContent = '';
     document.querySelector('.center-add2').textContent = '';

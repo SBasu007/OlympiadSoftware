@@ -71,12 +71,17 @@
         .text12 {
             position: absolute;
             top: 12.4cm; 
-            left:6.2cm;
+            left:3.2cm;
+        }
+        .text15 {
+            position: absolute;
+            top: 12.4cm; 
+            left:7.4cm;
         }
         .text13 {
             position: absolute;
             top: 12.4cm; 
-            left:10cm;
+            left:11.8cm;
         }
         .text14 {
             position: absolute;
@@ -139,6 +144,7 @@
     <div class="text12 font" id="text-content12" ></div>
     <div class="text13 font" id="text-content13" ></div>
     <div class="text14 font" id="text-content14" ></div>
+    <div class="text15 font" id="text-content15" ></div>
 
     <!-- Custom Modal Dialog -->
     <div id="myModal" class="modal">
@@ -194,7 +200,10 @@
         document.getElementById('text-content8').textContent = "Student Performance Report"
         document.getElementById('text-content9').textContent = "Total Marks - "+((students[currentDocIndex].subject.match(/(\d+)/)[0]<=2)?"200":"100");
         document.getElementById('text-content6').textContent = "Participated in : Talent Search "+students[currentDocIndex].subject.replace(/[0-9]/g, "")+" Olympiad, Level "+students[currentDocIndex].subject.match(/(\d+)/)[0];
-        document.getElementById('text-content7').textContent = "Held in : West Bengal";
+        const district = students[currentDocIndex].district;
+        const formattedDistrict = district.charAt(0).toUpperCase() + district.slice(1).toLowerCase();
+
+        document.getElementById('text-content7').textContent = "Held in : " + formattedDistrict + ", West Bengal";
         var cl = students[currentDocIndex].subject.match(/(\d+)/)[0];
         let p
         if (cl <= 2){
@@ -211,6 +220,7 @@
             return date;
             };  // Format date as MM/DD/YYYY
         document.getElementById('text-content12').textContent = "Class Rank - "+students[currentDocIndex].subject_school_rank;
+        document.getElementById('text-content15').textContent = "District Rank - "+students[currentDocIndex].subject_school_rank;
         document.getElementById('text-content13').textContent = "State Rank - "+students[currentDocIndex].subject_overall_rank;            
         document.getElementById('text-content14').textContent = "Date - "+ postDate();            
             // Open print dialog and wait for the user to finish printing
