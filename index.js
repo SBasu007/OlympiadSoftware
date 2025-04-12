@@ -92,6 +92,24 @@ app.get("/home", async(req,res) => {
     res.render("index.ejs",{message:" ",admin:isAdmin})
   });
 
+ //admin
+ app.get("/createUser",(req,res)=>{
+  const isAdmin = req.session.isAdmin || false;
+  res.render("./admin/addUser.ejs",{admin:isAdmin})
+ })
+ app.post("/addUser", async (req, res) => {
+  const { user,pass } = req.body;
+  const isAdmin = req.session.isAdmin || false;
+  // SQL query to insert school details
+  const query = `INSERT INTO users (username, password)
+    VALUES ($1, $2)`;
+  try {
+    await db.query(query, [user,pass]);
+    res.render('./admin/addUser.ejs',{error_message:"Inserted successfully",admin:isAdmin});
+  } catch (err) {
+    res.render('./admin/addUser.ejs',{error_message:"Error inserting agent, database not working",admin:isAdmin});
+  }
+});
   //agent
 app.get("/addAgent", (req,res) => {
   const isAdmin = req.session.isAdmin || false;
