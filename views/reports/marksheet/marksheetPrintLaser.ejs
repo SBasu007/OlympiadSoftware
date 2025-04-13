@@ -7,7 +7,7 @@
     <style>
         /* Set the paper size using cm */
         @page {
-            size: 20.30cm 20cm;
+            size: 20.30cm 21.59cm;
             margin: 0;
         }
 
@@ -199,7 +199,7 @@
         document.getElementById('text-content5').textContent = "School : "+students[currentDocIndex].school_name;
         document.getElementById('text-content8').textContent = "Student Performance Report"
         document.getElementById('text-content9').textContent = "Total Marks - 100";
-        document.getElementById('text-content6').textContent = "Participated in : Talent Search "+students[currentDocIndex].subject.replace(/[0-9]/g, "")+" Olympiad, Level "+students[currentDocIndex].subject.match(/(\d+)/)[0];
+        document.getElementById('text-content6').textContent = "Participated in : Talent Search "+students[currentDocIndex].subject.replace(/[0-9]/g, "")+" Olympiad, Class "+students[currentDocIndex].subject.match(/(\d+)/)[0];
         const district = students[currentDocIndex].district;
         const formattedDistrict = district.charAt(0).toUpperCase() + district.slice(1).toLowerCase();
 

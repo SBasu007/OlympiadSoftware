@@ -15,7 +15,7 @@
         .text1 {
             position: absolute;
             top: 3.4cm; 
-            left: 3.2cm;
+            left: 2.9cm;
         }
          .text2 {
             position: absolute;
@@ -25,29 +25,29 @@
         .text3 {
             position: absolute;
             top: 4.5cm; 
-            left: 3.2cm;
+            left: 2.9cm;
             
         }
         .text4 {
             position: absolute;
             top: 5.5cm; 
-            left: 3.2cm;
+            left: 2.9cm;
         }
         
         .text5 {
             position: absolute;
             top: 6.5cm; 
-            left: 14cm;
+            left: 15cm;
         }
         .text6 {
             position: absolute;
             top: 6.5cm; 
-            left: 3.2cm;
+            left: 2.9cm;
         }
         .text7 {
             position: absolute;
             top: 7.5cm; 
-            left: 3.2cm;
+            left: 2.9cm;
         }
         
         .font{
@@ -144,7 +144,7 @@
     function loadAndPrintDocument() {
         if (currentDocIndex < students.length) {
             // Load content from the current document
-            document.getElementById('text-content1').textContent = "Subject - " + students[currentDocIndex].subject;
+            document.getElementById('text-content1').textContent = "Subject - Talent Search "+students[currentDocIndex].subject.replace(/[0-9]/g, "")+" Olympiad, Class "+students[currentDocIndex].subject.match(/(\d+)/)[0];
             document.getElementById('text-content2').textContent = "Roll - " + students[currentDocIndex].roll;
             document.getElementById('text-content3').textContent = "Name - " + students[currentDocIndex].name;
             document.getElementById('text-content4').textContent = "Guardian Name - " + students[currentDocIndex].guard_name;

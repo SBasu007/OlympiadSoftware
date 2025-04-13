@@ -111,7 +111,7 @@ function postDate() {
     <% rows.forEach((row, index) => { %>
         <% if (index % rowsPerPage === 0) { currentPage++; %>
             <div class="page">
-                <h2>RESULT SHEET</h2>
+                <h2>RESULT SHEET WITH RANK</h2>
                 <h3><%= row.school_name.toUpperCase() %> [Code: <%= code %>] Session: <%= session %></h3>
                 <p>Page <%= currentPage %> of <%= totalPages %></p>
                 <p>Dated: <%= postDate()%></p>
