@@ -198,7 +198,7 @@
         document.getElementById('text-content4').textContent = "Roll no. : "+students[currentDocIndex].roll;
         document.getElementById('text-content5').textContent = "School : "+students[currentDocIndex].school_name;
         document.getElementById('text-content8').textContent = "Student Performance Report"
-        document.getElementById('text-content9').textContent = "Total Marks - "+((students[currentDocIndex].subject.match(/(\d+)/)[0]<=2)?"200":"100");
+        document.getElementById('text-content9').textContent = "Total Marks - 100";
         document.getElementById('text-content6').textContent = "Participated in : Talent Search "+students[currentDocIndex].subject.replace(/[0-9]/g, "")+" Olympiad, Level "+students[currentDocIndex].subject.match(/(\d+)/)[0];
         const district = students[currentDocIndex].district;
         const formattedDistrict = district.charAt(0).toUpperCase() + district.slice(1).toLowerCase();
@@ -206,11 +206,8 @@
         document.getElementById('text-content7').textContent = "Held in : " + formattedDistrict + ", West Bengal";
         var cl = students[currentDocIndex].subject.match(/(\d+)/)[0];
         let p
-        if (cl <= 2){
-            p = students[currentDocIndex].marks * 0.5; 
-        }else{
-            p = students[currentDocIndex].marks;
-        }
+        p = students[currentDocIndex].marks;
+    
         document.getElementById('text-content10').textContent = "Marks Scored - "+students[currentDocIndex].marks;
         document.getElementById('text-content11').textContent = "Percentile Score - "+p+"%";
         // Current date

@@ -486,11 +486,7 @@ app.post("/editMarks", async (req, res) => {
   const isAdmin = req.session.isAdmin || false;
   const subjectQuery = await db.query("select * from student where roll = $1",[roll])
   let p;
-    if (subjectQuery.rows[0].subject.match(/(\d+)/)[0] <= 2){
-      p = marks*0.5
-    }else{
       p = marks;
-    }
   // SQL query to update marks
   const query = `
     UPDATE marks 
@@ -584,11 +580,8 @@ app.post("/addMarks", async (req, res) => {
       return res.render('./marks/addMarks.ejs', { error_message: "Course for the given year not found", admin: isAdmin });
     }
     let p;
-    if (studentResult.rows[0].subject.match(/(\d+)/)[0] <= 2){
-      p = marks*0.5
-    }else{
-      p = marks;
-    }
+    
+    p = marks;
     
     // If the student exists and the marks are valid, insert the marks into the marks table
     const insertMarksQuery = `INSERT INTO marks (roll,marks,percentage)
