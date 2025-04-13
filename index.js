@@ -384,7 +384,7 @@ app.post("/addStudent", async (req, res) => {
 
   try {
     await db.query(query, [roll, session, year, code, date, name, guard_name, lang, mode, district.toUpperCase()]);
-    res.render('./student/addStudent.ejs', { error_message: "Student added successfully", admin: isAdmin, session , year, code });
+    res.render('./student/addStudent.ejs', { error_message: "Student added successfully", admin: isAdmin, session , year, code, district });
   } catch (err) {
       res.render('./student/addStudent.ejs', { error_message: err, admin: isAdmin });
   }
@@ -547,7 +547,7 @@ app.get('/getStudentDetails', async (req, res) => {
   try {
     // Query to get the details for the selected school code
     const result = await db.query(
-      'SELECT student.* , school.name AS center_name, school.code, school.add1 AS center_add1,school.add2 AS center_add2 FROM student JOIN school ON school.code = student.center_num WHERE student.roll = $1',
+      'SELECT student.* , school.name AS center_name, school.code, school.add1 AS center_add1,school.add2 AS center_add2 FROM student JOIN school ON school.code = student.center_num WHERE student.roll ILIKE $1',
       [roll]
     );
     
@@ -562,14 +562,14 @@ app.get('/getStudentDetails', async (req, res) => {
   }
 });
 app.post("/addMarks", async (req, res) => {
-  const { roll, year,marks } = req.body;
+  const { roll2, year,marks } = req.body;
   const isAdmin = req.session.isAdmin || false;
 
   // First, check if the student exists using the roll number
   const fetchStudentQuery = `SELECT * FROM student WHERE roll = $1`;
 
   try {
-    const studentResult = await db.query(fetchStudentQuery, [roll]);
+    const studentResult = await db.query(fetchStudentQuery, [roll2]);
     if (studentResult.rows.length === 0) {
       return res.render('./marks/addMarks.ejs', { error_message: "Student not found", admin: isAdmin });
     }
@@ -587,7 +587,7 @@ app.post("/addMarks", async (req, res) => {
     const insertMarksQuery = `INSERT INTO marks (roll,marks,percentage)
                               VALUES ($1, $2,$3)`;
 
-    await db.query(insertMarksQuery, [roll,marks,p]);
+    await db.query(insertMarksQuery, [roll2,marks,p]);
 
     res.render('./marks/addMarks.ejs', { error_message: "Marks added successfully", admin: isAdmin });
   } catch (err) {

@@ -5,6 +5,7 @@
         <% if (typeof error_message !== 'undefined') { %>
           <p style="text-align: center; color:red"><%= error_message %></p>
         <% } %>
+          <div class="rollValidation" style="text-align: center; color:red; padding-bottom: 10px; font-weight: 500; font-size: 17px;">ROLL NO. ALREADY EXISTS </div>
         <div class="form-row">
           <div class="form-row-element">
             <label class="student-label" for="session">SESSION <span style="color:red">*</span></label>
@@ -51,42 +52,42 @@
             <input type="text" class="student-input" id="name" name="name" style="width:45vw;" disabled required autocomplete="off">
           </div>
         </div>
+        <div class="form-row">
+          <div class="form-row-element">
+            <label class="student-label" for="district">DISTRICT<span style="color:red">*</span></label>
+            <select class="student-input" id="district" name="district" required>
+              <option value="" disabled <%= typeof district === 'undefined' ? 'selected' : '' %>>Select a district</option>
+              <option value="Alipurduar" <%= typeof district !== 'undefined' && district === 'Alipurduar' ? 'selected' : '' %>>Alipurduar</option>
+              <option value="Bankura" <%= typeof district !== 'undefined' && district === 'Bankura' ? 'selected' : '' %>>Bankura</option>
+              <option value="Birbhum" <%= typeof district !== 'undefined' && district === 'Birbhum' ? 'selected' : '' %>>Birbhum</option>
+              <option value="Cooch Behar" <%= typeof district !== 'undefined' && district === 'Cooch Behar' ? 'selected' : '' %>>Cooch Behar</option>
+              <option value="Dakshin Dinajpur" <%= typeof district !== 'undefined' && district === 'Dakshin Dinajpur' ? 'selected' : '' %>>Dakshin Dinajpur</option>
+              <option value="Darjeeling" <%= typeof district !== 'undefined' && district === 'Darjeeling' ? 'selected' : '' %>>Darjeeling</option>
+              <option value="Hooghly" <%= typeof district !== 'undefined' && district === 'Hooghly' ? 'selected' : '' %>>Hooghly</option>
+              <option value="Howrah" <%= typeof district !== 'undefined' && district === 'Howrah' ? 'selected' : '' %>>Howrah</option>
+              <option value="Jalpaiguri" <%= typeof district !== 'undefined' && district === 'Jalpaiguri' ? 'selected' : '' %>>Jalpaiguri</option>
+              <option value="Jhargram" <%= typeof district !== 'undefined' && district === 'Jhargram' ? 'selected' : '' %>>Jhargram</option>
+              <option value="Kalimpong" <%= typeof district !== 'undefined' && district === 'Kalimpong' ? 'selected' : '' %>>Kalimpong</option>
+              <option value="Kolkata" <%= typeof district !== 'undefined' && district === 'Kolkata' ? 'selected' : '' %>>Kolkata</option>
+              <option value="Malda" <%= typeof district !== 'undefined' && district === 'Malda' ? 'selected' : '' %>>Malda</option>
+              <option value="Murshidabad" <%= typeof district !== 'undefined' && district === 'Murshidabad' ? 'selected' : '' %>>Murshidabad</option>
+              <option value="Nadia" <%= typeof district !== 'undefined' && district === 'Nadia' ? 'selected' : '' %>>Nadia</option>
+              <option value="North 24 Parganas" <%= typeof district !== 'undefined' && district === 'North 24 Parganas' ? 'selected' : '' %>>North 24 Parganas</option>
+              <option value="Paschim Bardhaman" <%= typeof district !== 'undefined' && district === 'Paschim Bardhaman' ? 'selected' : '' %>>Paschim Bardhaman</option>
+              <option value="Paschim Medinipur" <%= typeof district !== 'undefined' && district === 'Paschim Medinipur' ? 'selected' : '' %>>Paschim Medinipur</option>
+              <option value="Purba Bardhaman" <%= typeof district !== 'undefined' && district === 'Purba Bardhaman' ? 'selected' : '' %>>Purba Bardhaman</option>
+              <option value="Purba Medinipur" <%= typeof district !== 'undefined' && district === 'Purba Medinipur' ? 'selected' : '' %>>Purba Medinipur</option>
+              <option value="Purulia" <%= typeof district !== 'undefined' && district === 'Purulia' ? 'selected' : '' %>>Purulia</option>
+              <option value="South 24 Parganas" <%= typeof district !== 'undefined' && district === 'South 24 Parganas' ? 'selected' : '' %>>South 24 Parganas</option>
+              <option value="Uttar Dinajpur" <%= typeof district !== 'undefined' && district === 'Uttar Dinajpur' ? 'selected' : '' %>>Uttar Dinajpur</option>
+            </select>
+          </div>
+        </div>
         
         <div class="form-row">
           <div class="form-row-element">
             <label class="student-label"  for="guard_name">GUARDIAN NAME <span style="color:red">*</span></label>
             <input type="text" class="student-input" id="guard_name" name="guard_name" disabled required autocomplete="off">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-row-element">
-            <label class="student-label" for="district">DISTRICT<span style="color:red">*</span></label>
-            <select class="student-input" id="district" name="district" required>
-              <option value="" disabled selected>Select a district</option>
-              <option value="Alipurduar">Alipurduar</option>
-              <option value="Bankura">Bankura</option>
-              <option value="Birbhum">Birbhum</option>
-              <option value="Cooch Behar">Cooch Behar</option>
-              <option value="Dakshin Dinajpur">Dakshin Dinajpur</option>
-              <option value="Darjeeling">Darjeeling</option>
-              <option value="Hooghly">Hooghly</option>
-              <option value="Howrah">Howrah</option>
-              <option value="Jalpaiguri">Jalpaiguri</option>
-              <option value="Jhargram">Jhargram</option>
-              <option value="Kalimpong">Kalimpong</option>
-              <option value="Kolkata">Kolkata</option>
-              <option value="Malda">Malda</option>
-              <option value="Murshidabad">Murshidabad</option>
-              <option value="Nadia">Nadia</option>
-              <option value="North 24 Parganas">North 24 Parganas</option>
-              <option value="Paschim Bardhaman">Paschim Bardhaman</option>
-              <option value="Paschim Medinipur">Paschim Medinipur</option>
-              <option value="Purba Bardhaman">Purba Bardhaman</option>
-              <option value="Purba Medinipur">Purba Medinipur</option>
-              <option value="Purulia">Purulia</option>
-              <option value="South 24 Parganas">South 24 Parganas</option>
-              <option value="Uttar Dinajpur">Uttar Dinajpur</option>
-            </select>
           </div>
         </div>
         <div class="form-row">
@@ -156,6 +157,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Disable Fields on Page Load
 function disableFields() {
+  document.querySelector('.rollValidation').style.display = 'none';
   const fields = document.querySelectorAll('input:not(#roll), button[type="submit"]');
   fields.forEach(field => field.disabled = true);
 }
@@ -171,7 +173,7 @@ document.getElementById('roll').addEventListener('input', function () {
       .then(data => {
         if (data.exists) {
           // Show custom dialog
-          document.getElementById('roll-dialog').style.display = 'block';
+          document.querySelector('.rollValidation').style.display = 'block';
           // Disable all fields except the roll
           document.querySelectorAll('input').forEach(input => {
             if (input.id !== 'roll') {
@@ -184,6 +186,7 @@ document.getElementById('roll').addEventListener('input', function () {
             input.disabled = false;
           });
           document.getElementById('submit').disabled = false;
+          document.querySelector('.rollValidation').style.display = 'none';
         }
       })
       .catch(error => console.error('Error checking roll:', error));

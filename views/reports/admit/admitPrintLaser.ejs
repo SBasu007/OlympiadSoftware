@@ -15,39 +15,39 @@
         .text1 {
             position: absolute;
             top: 3.4cm; 
-            left: 4.2cm;
+            left: 3.2cm;
         }
          .text2 {
             position: absolute;
-            top: 3.4cm; 
-            left: 13cm;
+            top: 4.5cm; 
+            left: 14cm;
         }
         .text3 {
             position: absolute;
             top: 4.5cm; 
-            left: 4.2cm;
+            left: 3.2cm;
             
         }
         .text4 {
             position: absolute;
             top: 5.5cm; 
-            left: 4.2cm;
+            left: 3.2cm;
         }
         
         .text5 {
             position: absolute;
             top: 6.5cm; 
-            left: 4.2cm;
+            left: 14cm;
         }
         .text6 {
             position: absolute;
-            top: 7.5cm; 
-            left: 4.2cm;
+            top: 6.5cm; 
+            left: 3.2cm;
         }
         .text7 {
             position: absolute;
-            top: 8.5cm; 
-            left: 4.2cm;
+            top: 7.5cm; 
+            left: 3.2cm;
         }
         
         .font{
@@ -149,10 +149,10 @@
             document.getElementById('text-content3').textContent = "Name - " + students[currentDocIndex].name;
             document.getElementById('text-content4').textContent = "Guardian Name - " + students[currentDocIndex].guard_name;
             document.getElementById('text-content6').textContent = "School Name - " + students[currentDocIndex].school_name;
-            document.getElementById('text-content5').textContent = "School Code - " + students[currentDocIndex].school_code;
+            document.getElementById('text-content5').textContent = "Sch. Code - " + students[currentDocIndex].school_code;
             document.getElementById('text-content7').textContent =  "Center Address - "+students[currentDocIndex].school_address_line1;
 
-            // Open print dialog and wait for the user to finish printing
+            // Open print dialog and wait for the user to finish printing students[currentDocIndex].school_name
             setTimeout(() => {
                 window.print();
 

@@ -10,6 +10,7 @@
                     <label class="student-label"  for="roll">ROLL NO.</label>
                     <input type="text"  id="roll" name="roll" required autocomplete="off">
             </div>
+            <input type="hidden"  id="roll2" name="roll2" required autocomplete="off">
             <div class="form-row-element">
                 <label class="student-label" for="session">SESSION</label>
                 <input type="text"  id="session" name="session">
@@ -51,6 +52,7 @@
   document.getElementById('roll').focus();
 };
 const rollInput = document.querySelector('#roll');
+const rollInput2 = document.querySelector('#roll2');
 const sessionInput = document.querySelector('#session');
 const yearInput = document.querySelector('#year');
 const nameDiv = document.querySelector('.student-name');
@@ -63,6 +65,7 @@ function fetchStudentDetails(selectedRoll) {
     .then(data => {
       if (data) {
         // Populate the session, year, name, and center name with the fetched data
+        rollInput2.value = data.roll || '';
         sessionInput.value = data.session || '';
         yearInput.value = data.subject || '';
         nameDiv.innerText = data.name || 'N/A';
