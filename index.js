@@ -742,6 +742,7 @@ app.post("/printAdmitLaser", async(req,res)=>{
       SELECT s.*, 
        sch.name AS school_name,
        sch.add1 AS school_address_line1,  
+       sch.add2 AS school_address_line2, 
        sch.code AS school_code
       FROM student s
       JOIN school sch ON s.center_num = sch.code

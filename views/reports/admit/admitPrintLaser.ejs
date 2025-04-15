@@ -8,14 +8,14 @@
     <style>
         /* Set the paper size using cm */
         @page {
-            size: 20.3cm 10.2cm;
+            size: 19.8cm 10.2cm;
             margin: 0;
         }
 
         .text1 {
             position: absolute;
             top: 3.4cm; 
-            left: 2.9cm;
+            left: 3.6cm;
         }
          .text2 {
             position: absolute;
@@ -25,29 +25,34 @@
         .text3 {
             position: absolute;
             top: 4.5cm; 
-            left: 2.9cm;
+            left: 3.6cm;
             
         }
         .text4 {
             position: absolute;
             top: 5.5cm; 
-            left: 2.9cm;
+            left: 3.6cm;
         }
         
         .text5 {
             position: absolute;
             top: 6.5cm; 
-            left: 15cm;
+            left: 16cm;
         }
         .text6 {
             position: absolute;
             top: 6.5cm; 
-            left: 2.9cm;
+            left: 3.6cm;
         }
         .text7 {
             position: absolute;
             top: 7.5cm; 
-            left: 2.9cm;
+            left: 3.6cm;
+        }
+        .text8 {
+            position: absolute;
+            top: 8.4cm; 
+            left: 6.9cm;
         }
         
         .font{
@@ -98,6 +103,7 @@
     <div class="text5 font" id="text-content5"></div>
     <div class="text6 font" id="text-content6"></div>
     <div class="text7 font" id="text-content7" ></div>
+    <div class="text8 font" id="text-content8" ></div>
 
     <!-- Custom Modal Dialog -->
     <div id="myModal" class="modal">
@@ -151,7 +157,9 @@
             document.getElementById('text-content6').textContent = "School Name - " + students[currentDocIndex].school_name;
             document.getElementById('text-content5').textContent = "Sch. Code - " + students[currentDocIndex].school_code;
             document.getElementById('text-content7').textContent =  "Center Address - "+students[currentDocIndex].school_address_line1;
-
+            if (students[currentDocIndex].school_address_line2 != null) {
+                document.getElementById('text-content8').textContent =  students[currentDocIndex].school_address_line2;
+            } 
             // Open print dialog and wait for the user to finish printing students[currentDocIndex].school_name
             setTimeout(() => {
                 window.print();
