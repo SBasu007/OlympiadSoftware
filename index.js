@@ -1435,6 +1435,42 @@ ORDER BY
   }
 });
 
+app.get("/viewSchool",(req,res)=>{
+  const isAdmin = req.session.isAdmin || false;
+  res.render("./reports/special/School Report/viewSchoolReport.ejs",{admin:isAdmin})
+ })
+ app.post("/printSchoolReport", async (req, res) => {
+  const { code, session, year } = req.body;
+  let isSubject = false
+  try {
+    // Base query
+    let query = `
+      SELECT S.roll, S.name, M.marks, S.subject
+      FROM student S
+      JOIN marks M ON S.roll = M.roll
+      WHERE S.center_num = $1 AND S.session = $2
+    `;
+
+    const name = await db.query("select name from school where code = $1",[code])
+    
+    const params = [code, session];
+    // Add subject filter if provided
+    if (year) {
+      query += " AND S.subject = $3";
+      params.push(year);
+      isSubject = true;
+    }
+
+    const result = await db.query(query, params);
+    res.render("./reports/special/School Report/schoolReport.ejs",{rows:result.rows,session,code, name:name.rows[0],isSubject, year})
+  } catch (error) {
+    console.error("Server error:", error);
+    res.status(500).send("Something went wrong");
+  }
+});
+
+
+
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
   });
@@ -1446,7 +1482,7 @@ app.listen(port, () => {
       console.error("Error closing the database connection:", err);
     }
   };
-  
+
   // Handle graceful shutdown
   process.on("SIGTERM", closeDatabase);
   process.on("SIGINT", closeDatabase);    
