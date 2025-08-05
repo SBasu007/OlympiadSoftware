@@ -491,7 +491,7 @@ app.post("/editMarks", async (req, res) => {
   const query = `
     UPDATE marks 
     SET 
-     marks = $1
+     marks = $1,
      percentage = $2
     WHERE roll = $3`;
 
@@ -1080,43 +1080,54 @@ app.get("/viewResultSheet", async (req,res) => {
 app.post("/printResultSheet", async(req,res) => {
   const { session, code } = req.body;
   const query = `
+    WITH ranked_students AS (
     SELECT 
-    school.name AS school_name,
-    student.name AS student_name, 
-    student.roll,
-    student.subject,
-    student.guard_name,
-    marks.marks,
-    DENSE_RANK() OVER (
+        school.name AS school_name,
+        student.name AS student_name, 
+        student.roll,
+        student.subject,
+        student.guard_name,
+        student.center_num,
+        student.district,
+        marks.marks,
+
+        -- Rank within the same subject and school (center)
+        DENSE_RANK() OVER (
             PARTITION BY student.subject, student.center_num  
             ORDER BY marks.marks DESC
         ) AS subject_school_rank,
 
-        -- Rank across all schools for a particular subject
+        -- Overall rank in the subject (state-level)
         DENSE_RANK() OVER (
             PARTITION BY student.subject
             ORDER BY marks.marks DESC
         ) AS subject_overall_rank,
 
+        -- Rank within the subject and district
         DENSE_RANK() OVER (
             PARTITION BY student.subject, student.district
             ORDER BY marks.marks DESC
         ) AS subject_district_rank
-FROM 
-    student
-JOIN 
-    school ON student.center_num = school.code
-JOIN 
-    marks ON student.roll = marks.roll  -- Join with the marks table
-WHERE 
-    student.session = $1
-AND 
-    student.center_num = $2
+
+    FROM 
+        student
+    JOIN 
+        school ON student.center_num = school.code
+    JOIN 
+        marks ON student.roll = marks.roll
+    WHERE 
+        student.session = $1
+)
+
+-- Now filter to show only students from the desired center_num (school)
+SELECT *
+FROM ranked_students
+WHERE center_num = $2
 ORDER BY 
-    student.subject, 
-    subject_school_rank,  -- Order by rank within each subject
-    SUBSTRING(student.roll FROM '([0-9]+)')::BIGINT ASC, 
-    student.roll;
+    subject, 
+    subject_school_rank,
+    SUBSTRING(roll FROM '([0-9]+)')::BIGINT ASC, 
+    roll;
 
   `;
 
