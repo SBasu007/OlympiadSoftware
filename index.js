@@ -1073,6 +1073,57 @@ ORDER BY student.subject, SUBSTRING(student.roll FROM '([0-9]+)')::BIGINT ASC, s
   }
 });
 
+// Subjectwise Attendance routes
+app.get("/viewSubjectwiseAttendance", async (req,res) => {
+  const isAdmin = req.session.isAdmin || false;
+  res.render("./reports/special/Subjectwise Attendance/viewSubjectwiseAttendance.ejs",{admin:isAdmin})
+});
+
+// Fetch distinct subjects for typeahead (optionally filtered by school code and session)
+app.get('/getSubjects', async (req, res) => {
+  const { query, code, session } = req.query;
+  try {
+    let sql = `SELECT DISTINCT subject FROM student WHERE subject IS NOT NULL`;
+    const params = [];
+    if (code) { params.push(code); sql += ` AND center_num = $${params.length}`; }
+    if (session) { params.push(session); sql += ` AND session = $${params.length}`; }
+    if (query) { params.push(`%${query}%`); sql += ` AND subject ILIKE $${params.length}`; }
+    sql += ' ORDER BY subject';
+    const result = await db.query(sql, params);
+    res.json(result.rows.map(r => ({ subject: r.subject })));
+  } catch (err) {
+    console.error('Error fetching subjects:', err);
+    res.status(500).json({ error: 'Failed to fetch subjects' });
+  }
+});
+
+// Print subjectwise attendance for a school/session/subject
+app.post('/printSubjectwiseAttendance', async (req, res) => {
+  const { code, session, subject } = req.body;
+  const isAdmin = req.session.isAdmin || false;
+  const sql = `
+    SELECT 
+      sch.name AS school_name,
+      st.name AS student_name,
+      st.roll,
+      st.guard_name
+    FROM student st
+    JOIN school sch ON st.center_num = sch.code
+    WHERE st.center_num = $1 AND st.session = $2 AND st.subject = $3
+    ORDER BY SUBSTRING(st.roll FROM '([0-9]+)')::BIGINT ASC, st.roll
+  `;
+  try {
+    const result = await db.query(sql, [code, session, subject]);
+    if (result.rows.length === 0) {
+      return res.render('./reports/special/Subjectwise Attendance/viewSubjectwiseAttendance.ejs', { admin: isAdmin, error_message: 'No records found for given filters' });
+    }
+    res.render('./reports/special/Subjectwise Attendance/subjectwiseAttendance.ejs', { rows: result.rows, code, session, subject, admin: isAdmin, school_name: result.rows[0]?.school_name });
+  } catch (error) {
+    console.error('Error printing subjectwise attendance:', error);
+    res.render('./reports/special/Subjectwise Attendance/viewSubjectwiseAttendance.ejs', { admin: isAdmin, error_message: 'Error generating report' });
+  }
+});
+
 app.get("/viewResultSheet", async (req,res) => {
   const isAdmin = req.session.isAdmin || false;
   res.render("./reports/special/Result Sheet/viewResultSheet.ejs",{admin:isAdmin})
