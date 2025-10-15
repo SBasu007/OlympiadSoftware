@@ -1073,10 +1073,14 @@ ORDER BY student.subject, SUBSTRING(student.roll FROM '([0-9]+)')::BIGINT ASC, s
   }
 });
 
-// Subjectwise Attendance routes
+// Subjectwise Attendance and Result routes
 app.get("/viewSubjectwiseAttendance", async (req,res) => {
   const isAdmin = req.session.isAdmin || false;
   res.render("./reports/special/Subjectwise Attendance/viewSubjectwiseAttendance.ejs",{admin:isAdmin})
+});
+app.get("/viewSubjectwiseResult", async (req,res) => {
+  const isAdmin = req.session.isAdmin || false;
+  res.render("./reports/special/Subjectwise Result/viewSubjectwiseResult.ejs",{admin:isAdmin})
 });
 
 // Fetch distinct subjects for typeahead (optionally filtered by school code and session)
@@ -1097,7 +1101,7 @@ app.get('/getSubjects', async (req, res) => {
   }
 });
 
-// Print subjectwise attendance for a school/session/subject
+// Print subjectwise attendance and result for a school/session/subject
 app.post('/printSubjectwiseAttendance', async (req, res) => {
   const { code, session, subject } = req.body;
   const isAdmin = req.session.isAdmin || false;
@@ -1121,6 +1125,77 @@ app.post('/printSubjectwiseAttendance', async (req, res) => {
   } catch (error) {
     console.error('Error printing subjectwise attendance:', error);
     res.render('./reports/special/Subjectwise Attendance/viewSubjectwiseAttendance.ejs', { admin: isAdmin, error_message: 'Error generating report' });
+  }
+});
+app.post("/printSubjectwiseResult", async(req,res) => {
+  const { session, code, subject } = req.body;
+  const query = `
+    WITH ranked_students AS (
+    SELECT 
+        school.name AS school_name,
+        student.name AS student_name, 
+        student.roll,
+        student.subject,
+        student.guard_name,
+        student.center_num,
+        student.district,
+        marks.marks,
+
+        -- Rank within the same subject and school (center)
+        DENSE_RANK() OVER (
+            PARTITION BY student.subject, student.center_num  
+            ORDER BY marks.marks DESC
+        ) AS subject_school_rank,
+
+        -- Overall rank in the subject (state-level)
+        DENSE_RANK() OVER (
+            PARTITION BY student.subject
+            ORDER BY marks.marks DESC
+        ) AS subject_overall_rank,
+
+        -- Rank within the subject and district
+        DENSE_RANK() OVER (
+            PARTITION BY student.subject, student.district
+            ORDER BY marks.marks DESC
+        ) AS subject_district_rank
+
+    FROM 
+        student
+    JOIN 
+        school ON student.center_num = school.code
+    JOIN 
+        marks ON student.roll = marks.roll
+    WHERE 
+        student.session = $1
+    AND
+        student.subject = $3
+)
+
+-- Now filter to show only students from the desired center_num (school)
+SELECT *
+FROM ranked_students
+WHERE center_num = $2
+ORDER BY 
+    subject, 
+    subject_school_rank,
+    SUBSTRING(roll FROM '([0-9]+)')::BIGINT ASC, 
+    roll;
+
+  `;
+
+  try {
+    // Execute the query with the provided session and school_code
+    const result = await db.query(query, [session, code, subject]);
+    if (result.rows.length>0){
+      res.render('./reports/special/Subjectwise Result/subjectwiseResult.ejs', { rows: result.rows,session,code,subject });
+    }
+    else{
+      res.send("No data found. Exit this tab");
+    }
+    // Send the query result to the EJS view
+  } catch (error) {
+    console.error('Error executing query:', error);
+    res.status(500).send('Error retrieving data');
   }
 });
 

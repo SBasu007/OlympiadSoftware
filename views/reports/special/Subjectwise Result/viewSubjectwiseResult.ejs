@@ -1,7 +1,7 @@
 <%- include("../../../partials/header.ejs")%>
 <div class="print-form" style="width:80vw">
-    <form action="/printSubjectwiseAttendance" method="POST" target="_blank">
-        <h5 style="text-align: center; margin-bottom:20px">Subjectwise Attendance</h5>
+    <form action="/printSubjectwiseResult" method="POST" target="_blank">
+        <h5 style="text-align: center; margin-bottom:20px">Subjectwise Result</h5>
         <h4 style="text-align: center; margin-bottom:20px">Enter School Code, Session and Subject</h4>
         <% if (typeof error_message !== 'undefined') { %>
           <p style="text-align: center; color:red"><%= error_message %></p>
