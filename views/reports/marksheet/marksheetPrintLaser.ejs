@@ -7,92 +7,97 @@
     <style>
         /* Set the paper size using cm */
         @page {
-            size: 20.30cm 21.59cm;
+            size: 23.4cm,20.3cm;
             margin: 0;
         }
-
+.text16 {
+    position: absolute;
+    top: 5.6cm; 
+    left: 7.0cm;
+}
         .text1 {
     position: absolute;
-    top: 5.7cm; 
-    left: 1.6cm;
+    top:  6.8cm; 
+    left: 6.1cm;
 }
 .text2 {
     position: absolute;
-    top: 6.5cm; /* Increased by 0.1cm more */
-    left: 1.6cm;
+    top: 7.6cm; /* Increased by 0.1cm more */
+    left: 5.1cm;
 }
 .text3 {
     position: absolute;
-    top: 7.4cm; /* Increased by 0.1cm more */
-    left: 1.6cm;
+    top: 8.4cm; /* Increased by 0.1cm more */
+    left: 2.9cm;
 }
 .text4 {
     position: absolute;
-    top: 7.4cm; /* Matches .text3 to maintain box levels */
-    left: 6.8cm;
+    top: 8.4cm; /* Matches .text3 to maintain box levels */
+    left: 12.8cm;
 }
 .text5 {
     position: absolute;
-    top: 8.4cm; /* Increased by 0.1cm */
-    left: 1.6cm;
+    top: 9.25cm; /* Increased by 0.1cm */
+    left: 3.6cm;
 }
 .text6 {
     position: absolute;
-    top: 9.3cm; /* Increased by 0.1cm */
-    left: 1.6cm;
+    top: 10.2cm; /* Increased by 0.1cm */
+    left: 4.6cm;
 }
 .text7 {
     position: absolute;
-    top: 10.3cm; /* Increased by 0.1cm */
-    left: 1.6cm;
+    top: 11.05cm; /* Increased by 0.1cm */
+    left: 3.6cm;
 }
 
 .text8 {
     position: absolute;
-    top: 12.5cm; /* was 11cm */
+    top: 12.7cm; /* was 11cm */
     left: 5.5cm;
     font-weight: bold;
 }
 .text9 {
     position: absolute;
-    top: 13.7cm; /* was 11.7cm */
+    top: 13.9cm; /* was 11.7cm */
     left: 3.2cm;
 }
 .text10 {
     position: absolute;
-    top: 13.7cm; /* was 11.7cm */
+    top: 13.9cm; /* was 11.7cm */
     left: 7.4cm;
 }
 .text11 {
     position: absolute;
-    top: 13.7cm; /* was 11.7cm */
+    top: 13.9cm; /* was 11.7cm */
     left: 11.8cm;
 }
 .text12 {
     position: absolute;
-    top: 14.9cm; /* was 12.4cm */
+    top: 15.1cm; /* was 12.4cm */
     left: 3.2cm;
 }
 .text15 {
     position: absolute;
-    top: 14.9cm; /* was 12.4cm */
+    top: 15.1cm; /* was 12.4cm */
     left: 7.4cm;
 }
 .text13 {
     position: absolute;
-    top: 14.9cm; /* was 12.4cm */
+    top: 15.1cm; /* was 12.4cm */
     left: 11.8cm;
 }
 .text14 {
     position: absolute;
-    top: 19cm; /* was 14cm */
-    left: 1.6cm;
+    top: 19.0cm; /* was 14cm */
+    left: 15.8cm;
 }
+
         .font{
             width:max-content;
             height: max-content;
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 17px;
+            font-size: 16px;
         }
         /* Modal styling */
         .modal {
@@ -130,6 +135,7 @@
 </head>
 <body>
 
+    
     <div class="text1 font" id="text-content1" >DISTINCTION</div>
     <div class="text2 font" id="text-content2" ></div>
     <div class="text3 font" id="text-content3" ></div>
@@ -145,7 +151,7 @@
     <div class="text13 font" id="text-content13" ></div>
     <div class="text14 font" id="text-content14" ></div>
     <div class="text15 font" id="text-content15" ></div>
-
+    <div class="text16 font" id="text-content16" ></div>
     <!-- Custom Modal Dialog -->
     <div id="myModal" class="modal">
         <div class="modal-content">
@@ -192,19 +198,21 @@
         if (currentDocIndex < students.length) {
             // Load content from the current document
         // Student data
-        document.getElementById('text-content1').innerHTML = "This is to certify that: <strong>" + students[currentDocIndex].name + "</strong>";
+        document.getElementById('text-content1').innerHTML =  students[currentDocIndex].name;
 
-        document.getElementById('text-content2').innerHTML = "Son/Daughter of Mr/Ms : <strong>"+students[currentDocIndex].guard_name + "</strong>";
-        document.getElementById('text-content3').innerHTML = "Class : <strong>"+students[currentDocIndex].subject.match(/(\d+)/)[0] + "</strong>";
-        document.getElementById('text-content4').innerHTML = "Roll no. : <strong>"+students[currentDocIndex].roll + "</strong>";
-        document.getElementById('text-content5').innerHTML = "School : <strong>"+students[currentDocIndex].school_name + "</strong>";
+        document.getElementById('text-content2').innerHTML = students[currentDocIndex].guard_name;
+        document.getElementById('text-content3').innerHTML = students[currentDocIndex].subject.match(/(\d+)/)[0];
+        document.getElementById('text-content4').innerHTML = students[currentDocIndex].roll;
+        document.getElementById('text-content5').innerHTML =  students[currentDocIndex].school_name ;
         document.getElementById('text-content8').textContent = "Student Performance Report ("+students[currentDocIndex].session+")"
         document.getElementById('text-content9').textContent = "Total Marks - 100";
-        document.getElementById('text-content6').innerHTML = "Participated in : <strong>Talent Search "+students[currentDocIndex].subject.replace(/[0-9]/g, "")+" Olympiad, Class "+students[currentDocIndex].subject.match(/(\d+)/)[0] + "</strong>";
+        document.getElementById('text-content6').innerHTML = "Talent Search "+students[currentDocIndex].subject.replace(/[0-9]/g, "")+" Olympiad, Class "+students[currentDocIndex].subject.match(/(\d+)/)[0];
+        const heading = "Talent Search "+students[currentDocIndex].subject.replace(/[0-9]/g, "")+" Olympiad";
+        document.getElementById('text-content16').innerHTML = heading.toUpperCase();
         const district = students[currentDocIndex].district;
         const formattedDistrict = district.charAt(0).toUpperCase() + district.slice(1).toLowerCase();
 
-        document.getElementById('text-content7').innerHTML = "Held in : <strong>" + formattedDistrict + ", West Bengal" + "</strong>";
+        document.getElementById('text-content7').innerHTML =  formattedDistrict + ", West Bengal";
         var cl = students[currentDocIndex].subject.match(/(\d+)/)[0];
         let p
         p = students[currentDocIndex].marks;
