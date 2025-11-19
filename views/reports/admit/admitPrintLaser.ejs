@@ -150,7 +150,27 @@
     function loadAndPrintDocument() {
         if (currentDocIndex < students.length) {
             // Load content from the current document
-            document.getElementById('text-content1').textContent = "Subject - Talent Search "+students[currentDocIndex].subject.replace(/[0-9]/g, "")+" Olympiad, Class "+students[currentDocIndex].subject.match(/(\d+)/)[0];
+            
+            // Extract class - handle numeric and text classes (Lower Nursery, Upper Nursery)
+            let classValue;
+            const subject = students[currentDocIndex].subject;
+            if (/lower\s*nursery/i.test(subject)) {
+                classValue = "Lower Nursery";
+            } else if (/upper\s*nursery/i.test(subject)) {
+                classValue = "Upper Nursery";
+            } else {
+                const numMatch = subject.match(/(\d+)/);
+                classValue = numMatch ? numMatch[0] : "N/A";
+            }
+            
+            // Extract subject name by removing numbers, "Lower Nursery", and "Upper Nursery"
+            const subjectName = students[currentDocIndex].subject
+                .replace(/[0-9]/g, "")
+                .replace(/lower\s*nursery/gi, "")
+                .replace(/upper\s*nursery/gi, "")
+                .trim();
+            
+            document.getElementById('text-content1').textContent = "Subject - Talent Search " + subjectName + " Olympiad, Class " + classValue;
             document.getElementById('text-content2').textContent = "Roll - " + students[currentDocIndex].roll;
             document.getElementById('text-content3').textContent = "Name - " + students[currentDocIndex].name;
             document.getElementById('text-content4').textContent = "Guardian Name - " + students[currentDocIndex].guard_name;

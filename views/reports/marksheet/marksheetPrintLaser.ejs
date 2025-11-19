@@ -195,17 +195,38 @@
         document.getElementById('text-content1').innerHTML = "This is to certify that: <strong>" + students[currentDocIndex].name + "</strong>";
 
         document.getElementById('text-content2').innerHTML = "Son/Daughter of Mr/Ms : <strong>"+students[currentDocIndex].guard_name + "</strong>";
-        document.getElementById('text-content3').innerHTML = "Class : <strong>"+students[currentDocIndex].subject.match(/(\d+)/)[0] + "</strong>";
+        
+        // Extract class - handle numeric and text classes (Lower Nursery, Upper Nursery)
+        let classValue;
+        const subject = students[currentDocIndex].subject;
+        if (/lower\s*nursery/i.test(subject)) {
+            classValue = "Lower Nursery";
+        } else if (/upper\s*nursery/i.test(subject)) {
+            classValue = "Upper Nursery";
+        } else {
+            const numMatch = subject.match(/(\d+)/);
+            classValue = numMatch ? numMatch[0] : "N/A";
+        }
+        
+        document.getElementById('text-content3').innerHTML = "Class : <strong>" + classValue + "</strong>";
         document.getElementById('text-content4').innerHTML = "Roll no. : <strong>"+students[currentDocIndex].roll + "</strong>";
         document.getElementById('text-content5').innerHTML = "School : <strong>"+students[currentDocIndex].school_name + "</strong>";
         document.getElementById('text-content8').textContent = "Student Performance Report ("+students[currentDocIndex].session+")"
         document.getElementById('text-content9').textContent = "Total Marks - 100";
-        document.getElementById('text-content6').innerHTML = "Participated in : <strong>Talent Search "+students[currentDocIndex].subject.replace(/[0-9]/g, "")+" Olympiad, Class "+students[currentDocIndex].subject.match(/(\d+)/)[0] + "</strong>";
+        
+        // Extract subject name by removing numbers, "Lower Nursery", and "Upper Nursery"
+        const subjectName = students[currentDocIndex].subject
+            .replace(/[0-9]/g, "")
+            .replace(/lower\s*nursery/gi, "")
+            .replace(/upper\s*nursery/gi, "")
+            .trim();
+        
+        document.getElementById('text-content6').innerHTML = "Participated in : <strong>Talent Search " + subjectName + " Olympiad, Class " + classValue + "</strong>";
         const district = students[currentDocIndex].district;
         const formattedDistrict = district.charAt(0).toUpperCase() + district.slice(1).toLowerCase();
 
         document.getElementById('text-content7').innerHTML = "Held in : <strong>" + formattedDistrict + ", West Bengal" + "</strong>";
-        var cl = students[currentDocIndex].subject.match(/(\d+)/)[0];
+        // classValue already extracted above, no need to re-extract
         let p
         p = students[currentDocIndex].marks;
     
