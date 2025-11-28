@@ -158,7 +158,10 @@
                 classValue = "Lower Nursery";
             } else if (/upper\s*nursery/i.test(subject)) {
                 classValue = "Upper Nursery";
-            } else {
+            } 
+            else if (/kg/i.test(subject)) {
+            classValue = "KG";
+        }else {
                 const numMatch = subject.match(/(\d+)/);
                 classValue = numMatch ? numMatch[0] : "N/A";
             }
@@ -168,6 +171,7 @@
                 .replace(/[0-9]/g, "")
                 .replace(/lower\s*nursery/gi, "")
                 .replace(/upper\s*nursery/gi, "")
+                .replace(/kg/gi, "")
                 .trim();
             
             document.getElementById('text-content1').textContent = "Subject - Talent Search " + subjectName + " Olympiad, Class " + classValue;
