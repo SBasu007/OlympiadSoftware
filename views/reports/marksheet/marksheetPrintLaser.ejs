@@ -192,9 +192,9 @@
         if (currentDocIndex < students.length) {
             // Load content from the current document
         // Student data
-        document.getElementById('text-content1').innerHTML = "This is to certify that: <strong>" + students[currentDocIndex].name + "</strong>";
+        document.getElementById('text-content1').innerHTML = "<strong>" + students[currentDocIndex].name + "</strong>";
 
-        document.getElementById('text-content2').innerHTML = "Son/Daughter of Mr/Ms : <strong>"+students[currentDocIndex].guard_name + "</strong>";
+        document.getElementById('text-content2').innerHTML = "<strong>"+students[currentDocIndex].guard_name + "</strong>";
         
         // Extract class - handle numeric and text classes (Lower Nursery, Upper Nursery)
         let classValue;
@@ -208,9 +208,9 @@
             classValue = numMatch ? numMatch[0] : "N/A";
         }
         
-        document.getElementById('text-content3').innerHTML = "Class : <strong>" + classValue + "</strong>";
-        document.getElementById('text-content4').innerHTML = "Roll no. : <strong>"+students[currentDocIndex].roll + "</strong>";
-        document.getElementById('text-content5').innerHTML = "School : <strong>"+students[currentDocIndex].school_name + "</strong>";
+        document.getElementById('text-content3').innerHTML = "<strong>" + classValue + "</strong>";
+        document.getElementById('text-content4').innerHTML = "<strong>"+students[currentDocIndex].roll + "</strong>";
+        document.getElementById('text-content5').innerHTML = "<strong>"+students[currentDocIndex].school_name + "</strong>";
         document.getElementById('text-content8').textContent = "Student Performance Report ("+students[currentDocIndex].session+")"
         document.getElementById('text-content9').textContent = "Total Marks - 100";
         
@@ -221,11 +221,11 @@
             .replace(/upper\s*nursery/gi, "")
             .trim();
         
-        document.getElementById('text-content6').innerHTML = "Participated in : <strong>Talent Search " + subjectName + " Olympiad, Class " + classValue + "</strong>";
+        document.getElementById('text-content6').innerHTML = "<strong>Talent Search " + subjectName + " Olympiad, Class " + classValue + "</strong>";
         const district = students[currentDocIndex].district;
         const formattedDistrict = district.charAt(0).toUpperCase() + district.slice(1).toLowerCase();
 
-        document.getElementById('text-content7').innerHTML = "Held in : <strong>" + formattedDistrict + ", West Bengal" + "</strong>";
+        document.getElementById('text-content7').innerHTML = "<strong>" + formattedDistrict + ", West Bengal" + "</strong>";
         // classValue already extracted above, no need to re-extract
         let p
         p = students[currentDocIndex].marks;
