@@ -7,76 +7,92 @@
     <style>
         /* Set the paper size using cm */
         @page {
-            size: 25.50cm 15.23cm;
+            size: 20.30cm 21.59cm;
             margin: 0;
         }
 
         .text1 {
-            position: absolute;
-            top: 5.5cm; 
-            left: 4.6cm;
-        }
-        .text2 {
-            position: absolute;
-            top: 6.28cm; 
-            left: 4.6cm;
-        }
-        .text3 {
-            position: absolute;
-            top: 7.18cm; 
-            left: 4.6cm;
-            
-        }
-        .text4 {
-            position: absolute;
-            top: 7.18cm; 
-            left: 15.1cm;
-        }
-        .text5 {
-            position: absolute;
-            top: 8.1cm; 
-            left:10.1cm;
-        }
-        .text6 {
-            position: absolute;
-            top: 12.4cm; 
-            left:4.5cm;
-        }
-        .text7 {
-            position: absolute;
-            top: 12.4cm; 
-            left:6.7cm;
-        }
-        .text8 {
-            position: absolute;
-            top: 12.4cm; 
-            left:8.9cm;
-        }
-        .text9 {
-            position: absolute;
-            top: 12.4cm; 
-            left:11.1cm;
-        }
-        .text10 {
-            position: absolute;
-            top: 12.4cm; 
-            left:13.7cm;
-        }
-        .text11 {
-            position: absolute;
-            top: 12.4cm; 
-            left:16.8cm;
-        }
-        .text12 {
-            position: absolute;
-            top: 13.6cm; 
-            left:2.1cm;
-        }
+    position: absolute;
+    top: 5.7cm; 
+    left: 2.3cm;
+}
+.text2 {
+    position: absolute;
+    top: 6.5cm; /* Increased by 0.1cm more */
+    left: 2.3cm;
+}
+.text3 {
+    position: absolute;
+    top: 7.4cm; /* Increased by 0.1cm more */
+    left: 2.3cm;
+}
+.text4 {
+    position: absolute;
+    top: 7.4cm; /* Matches .text3 to maintain box levels */
+    left: 7.5cm;
+}
+.text5 {
+    position: absolute;
+    top: 8.4cm; /* Increased by 0.1cm */
+    left: 2.3cm;
+}
+.text6 {
+    position: absolute;
+    top: 9.3cm; /* Increased by 0.1cm */
+    left: 2.3cm;
+}
+.text7 {
+    position: absolute;
+    top: 10.3cm; /* Increased by 0.1cm */
+    left: 2.3cm;
+}
+
+.text8 {
+    position: absolute;
+    top: 12.5cm; /* was 11cm */
+    left: 5.5cm;
+    font-weight: bold;
+}
+.text9 {
+    position: absolute;
+    top: 13.7cm; /* was 11.7cm */
+    left: 3.2cm;
+}
+.text10 {
+    position: absolute;
+    top: 13.7cm; /* was 11.7cm */
+    left: 7.4cm;
+}
+.text11 {
+    position: absolute;
+    top: 13.7cm; /* was 11.7cm */
+    left: 11.8cm;
+}
+.text12 {
+    position: absolute;
+    top: 14.9cm; /* was 12.4cm */
+    left: 3.2cm;
+}
+.text15 {
+    position: absolute;
+    top: 14.9cm; /* was 12.4cm */
+    left: 7.4cm;
+}
+.text13 {
+    position: absolute;
+    top: 14.9cm; /* was 12.4cm */
+    left: 11.8cm;
+}
+.text14 {
+    position: absolute;
+    top: 19cm; /* was 14cm */
+    left: 2.3cm;
+}
         .font{
             width:max-content;
             height: max-content;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 15px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 17px;
         }
         /* Modal styling */
         .modal {
@@ -126,18 +142,22 @@
     <div class="text10 font" id="text-content10" ></div>
     <div class="text11 font" id="text-content11" ></div>
     <div class="text12 font" id="text-content12" ></div>
+    <div class="text13 font" id="text-content13" ></div>
+    <div class="text14 font" id="text-content14" ></div>
+    <div class="text15 font" id="text-content15" ></div>
 
     <!-- Custom Modal Dialog -->
     <div id="myModal" class="modal">
         <div class="modal-content">
-            <p>No more documents to print!</p>
-            <button id="closeBtn">Close</button>
+            <p>Do you want to print the next document?</p>
+            <button id="yesBtn">Yes</button>
+            <button id="noBtn">No</button>
         </div>
     </div>
     <textarea id="studentData" style="display: none;"><%- JSON.stringify(display) %></textarea>
     <script>
         // Wait for the DOM to be fully loaded before running the script
-document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function() {
     // Get the data from the hidden textarea
     const studentData = document.getElementById('studentData').value;
 
@@ -146,52 +166,99 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let currentDocIndex = 0;
 
+    // Function to open the modal and wait for user response
+    function openModal() {
+        return new Promise((resolve) => {
+            const modal = document.getElementById("myModal");
+            const yesBtn = document.getElementById("yesBtn");
+            const noBtn = document.getElementById("noBtn");
+
+            modal.style.display = "flex";  // Show modal
+
+            yesBtn.onclick = () => {
+                modal.style.display = "none";  // Hide modal
+                resolve(true);  // User clicked "Yes"
+            };
+
+            noBtn.onclick = () => {
+                modal.style.display = "none";  // Hide modal
+                resolve(false);  // User clicked "No"
+            };
+        });
+    }
+
     // Function to load the document content and print it
     function loadAndPrintDocument() {
         if (currentDocIndex < students.length) {
             // Load content from the current document
-            document.getElementById('text-content1').textContent = students[currentDocIndex].name.toUpperCase();
-            document.getElementById('text-content2').textContent = students[currentDocIndex].school_name.toUpperCase();
-            document.getElementById('text-content3').textContent = students[currentDocIndex].roll;
-            document.getElementById('text-content4').textContent = students[currentDocIndex].year;
-            document.getElementById('text-content5').textContent = students[currentDocIndex].session;
-            document.getElementById('text-content8').textContent = students[currentDocIndex].theory_1;
-            document.getElementById('text-content9').textContent = students[currentDocIndex].theory_2;
-            document.getElementById('text-content6').textContent = students[currentDocIndex].prac_1;
-            document.getElementById('text-content7').textContent = students[currentDocIndex].prac_2;
+        // Student data
+        document.getElementById('text-content1').innerHTML = "Name : <strong>" + students[currentDocIndex].name + "</strong>";
 
-            // Calculating total marks for theory and practical
-            const totalMarks = 
-                parseInt(students[currentDocIndex].theory_1) + 
-                parseInt(students[currentDocIndex].theory_2) + 
-                parseInt(students[currentDocIndex].prac_1) + 
-                parseInt(students[currentDocIndex].prac_2);
-            document.getElementById('text-content10').textContent = totalMarks;  // Sum of theory and practical marks
-            document.getElementById('text-content11').textContent = students[currentDocIndex].division;
+        document.getElementById('text-content2').innerHTML = "Guardian Name : <strong>"+students[currentDocIndex].guard_name + "</strong>";
+        
+        // Extract class - handle numeric and text classes (Lower Nursery, Upper Nursery)
+        let classValue;
+        const subject = students[currentDocIndex].subject;
+        if (/lower\s*nursery/i.test(subject)) {
+            classValue = "Lower Nursery";
+        } else if (/upper\s*nursery/i.test(subject)) {
+            classValue = "Upper Nursery";
+        } else {
+            const numMatch = subject.match(/(\d+)/);
+            classValue = numMatch ? numMatch[0] : "N/A";
+        }
+        
+        document.getElementById('text-content3').innerHTML = "Class : <strong>" + classValue + "</strong>";
+        document.getElementById('text-content4').innerHTML = "Roll : <strong>"+students[currentDocIndex].roll + "</strong>";
+        document.getElementById('text-content5').innerHTML = "Appearing from : <strong>"+students[currentDocIndex].school_name + "</strong>";
+        document.getElementById('text-content8').textContent = "Student Performance Report ("+students[currentDocIndex].session+")"
+        document.getElementById('text-content9').textContent = "Total Marks - 100";
+        
+        // Extract subject name by removing numbers, "Lower Nursery", and "Upper Nursery"
+        const subjectName = students[currentDocIndex].subject
+            .replace(/[0-9]/g, "")
+            .replace(/lower\s*nursery/gi, "")
+            .replace(/upper\s*nursery/gi, "")
+            .trim();
+        
+        document.getElementById('text-content7').innerHTML = "Subject : <strong>Talent Search " + subjectName + " Olympiad, Class " + classValue + "</strong>";
+        const district = students[currentDocIndex].district;
+        const formattedDistrict = district.charAt(0).toUpperCase() + district.slice(1).toLowerCase();
 
-            // Current date
-            function postDate() {
-                const d = new Date();
-                return d.getDate() + "." + (d.getMonth() + 1) + "." + d.getFullYear();
-            }
-            document.getElementById('text-content12').textContent = postDate();
-
+        document.getElementById('text-content6').innerHTML = "District : <strong>" + formattedDistrict + ", West Bengal" + "</strong>";
+        // classValue already extracted above, no need to re-extract
+        let p
+        p = students[currentDocIndex].marks;
+    
+        document.getElementById('text-content10').textContent = "Marks Scored - "+students[currentDocIndex].marks;
+        document.getElementById('text-content11').textContent = "Percentile Score - "+p+"%";
+        // Current date
+        function postDate() {
+            const d = new Date();
+            let date = d.getDate() + "." + (d.getMonth() + 1) + "." + d.getFullYear();
+            return date;
+            };  // Format date as MM/DD/YYYY
+        document.getElementById('text-content12').textContent = "Class Rank - "+students[currentDocIndex].subject_school_rank;
+        document.getElementById('text-content15').textContent = "District Rank - "+students[currentDocIndex].subject_school_rank;
+        document.getElementById('text-content13').textContent = "State Rank - "+students[currentDocIndex].subject_overall_rank;            
+        document.getElementById('text-content14').textContent = "Date - "+ postDate();            
             // Open print dialog and wait for the user to finish printing
             setTimeout(() => {
                 window.print();
 
-                // Automatically move to the next document after printing
-                currentDocIndex++;
-                loadAndPrintDocument(); // Load and print next document
-            }, 500); // Delay before opening the print dialog
+                // After the print dialog, wait for the user's confirmation with custom modal
+                setTimeout(async () => {
+                    let userResponse = await openModal();
+                    if (userResponse) {
+                        currentDocIndex++; // Move to the next document
+                        loadAndPrintDocument(); // Load and print next document
+                    } else {
+                        alert("Printing stopped.");
+                    }
+                }, 500); // Increased delay to 1000ms (1 second) for the modal
+            }, 1000); // Increased delay to 2000ms (2 seconds) before opening the print dialog
         } else {
-            const modal = document.getElementById("myModal");
-                    modal.style.display = "flex"; // Show modal
-    
-                    // Close button functionality
-                    document.getElementById("closeBtn").onclick = function() {
-                        window.close(); // Close the tab
-                    };
+            alert("No more documents to print.");
         }
     }
 

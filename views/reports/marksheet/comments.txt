@@ -1,0 +1,131 @@
+    <script>
+        // Wait for the DOM to be fully loaded before running the script
+        document.addEventListener('DOMContentLoaded', function() {
+    // Get the data from the hidden textarea
+    const studentData = document.getElementById('studentData').value;
+
+    // Parse the JSON data
+    const students = JSON.parse(studentData);
+
+    let currentDocIndex = 0;
+
+    // Function to open the modal and wait for user response
+    function openModal() {
+        return new Promise((resolve) => {
+            const modal = document.getElementById("myModal");
+            const yesBtn = document.getElementById("yesBtn");
+            const noBtn = document.getElementById("noBtn");
+
+            modal.style.display = "flex";  // Show modal
+
+            yesBtn.onclick = () => {
+                modal.style.display = "none";  // Hide modal
+                resolve(true);  // User clicked "Yes"
+            };
+
+            noBtn.onclick = () => {
+                modal.style.display = "none";  // Hide modal
+                resolve(false);  // User clicked "No"
+            };
+        });
+    }
+
+    // Function to load the document content and print it
+    function loadAndPrintDocument() {
+        if (currentDocIndex < students.length) {
+            // Load content from the current document
+        // Student data
+        document.getElementById('text-content1').innerHTML = "<strong>" + students[currentDocIndex].name + "</strong>";
+
+        document.getElementById('text-content2').innerHTML = "<strong>"+students[currentDocIndex].guard_name + "</strong>";
+        
+        // Extract class - handle numeric and text classes (Lower Nursery, Upper Nursery)
+        let classValue;
+        const subject = students[currentDocIndex].subject;
+        if (/lower\s*nursery/i.test(subject)) {
+            classValue = "Lower Nursery";
+        } else if (/upper\s*nursery/i.test(subject)) {
+            classValue = "Upper Nursery";
+        } 
+        else if (/kg/i.test(subject)) {
+            classValue = "KG";
+        }
+        else {
+            const numMatch = subject.match(/(\d+)/);
+            classValue = numMatch ? numMatch[0] : "N/A";
+        }
+        
+        document.getElementById('text-content3').innerHTML = "<strong>" + classValue + "</strong>";
+        document.getElementById('text-content4').innerHTML = "<strong>"+students[currentDocIndex].roll + "</strong>";
+        document.getElementById('text-content5').innerHTML = "<strong>"+students[currentDocIndex].school_name + "</strong>";
+        document.getElementById('text-content8').textContent = "Student Performance Report ("+students[currentDocIndex].session+")"
+        document.getElementById('text-content9').textContent = "Total Marks - 100";
+        
+        // Extract subject name by removing numbers, "Lower Nursery", and "Upper Nursery"
+        const subjectName = students[currentDocIndex].subject
+            .replace(/[0-9]/g, "")
+            .replace(/lower\s*nursery/gi, "")
+            .replace(/upper\s*nursery/gi, "")
+            .replace(/kg/gi, "")
+            .trim();
+        
+        document.getElementById('text-content6').innerHTML = "<strong>Talent Search " + subjectName + " Olympiad, Class " + classValue + "</strong>";
+        const district = students[currentDocIndex].district;
+        const formattedDistrict = district.charAt(0).toUpperCase() + district.slice(1).toLowerCase();
+
+        document.getElementById('text-content7').innerHTML = "<strong>" + formattedDistrict + ", West Bengal" + "</strong>";
+        // classValue already extracted above, no need to re-extract
+        let p
+        p = students[currentDocIndex].marks;
+    
+        document.getElementById('text-content10').textContent = "Marks Scored - "+students[currentDocIndex].marks;
+        document.getElementById('text-content11').textContent = "Percentile Score - "+p+"%";
+        // Current date
+        function postDate() {
+            const d = new Date();
+            let date = d.getDate() + "." + (d.getMonth() + 1) + "." + d.getFullYear();
+            return date;
+            };  // Format date as MM/DD/YYYY
+        document.getElementById('text-content12').textContent = "Class Rank - "+students[currentDocIndex].subject_school_rank;
+        document.getElementById('text-content15').textContent = "District Rank - "+students[currentDocIndex].subject_school_rank;
+        document.getElementById('text-content13').textContent = "State Rank - "+students[currentDocIndex].subject_overall_rank;            
+        document.getElementById('text-content14').textContent = "Date - "+ postDate();            
+            // Open print dialog and wait for the user to finish printing
+            setTimeout(() => {
+                window.print();
+
+                // After the print dialog, wait for the user's confirmation with custom modal
+                setTimeout(async () => {
+                    let userResponse = await openModal();
+                    if (userResponse) {
+                        // currentDocIndex++; // Move to the next document
+                        // loadAndPrintDocument(); // Load and print next document
+                        
+                        currentDocIndex++;
+
+                        // Force browser reflow
+                        document.body.style.display = "none";
+                        document.body.offsetHeight;
+                        document.body.style.display = "block";
+
+                        // Delay before next print
+                        setTimeout(() => {
+                            loadAndPrintDocument();
+                        }, 300);
+                    } else {
+                        alert("Printing stopped.");
+                    }
+                }, 500); // Increased delay to 1000ms (1 second) for the modal
+            }, 1000); // Increased delay to 2000ms (2 seconds) before opening the print dialog
+        } else {
+            alert("No more documents to print.");
+        }
+    }
+
+    // Automatically load and print the first document on page load
+    window.onload = function() {
+        loadAndPrintDocument();
+    };
+});
+
+    </script>

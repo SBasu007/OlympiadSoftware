@@ -764,38 +764,59 @@ app.get("/viewMarksheet", async (req,res) => {
   const isAdmin = req.session.isAdmin || false;
   res.render("./reports/marksheet/viewMarksheet.ejs",{admin:isAdmin})
 }); 
-app.post("/printMarksheet", async (req, res) => {
-  const { start_roll, end_roll } = req.body;
+app.post("/printMarksheetLaserReal", async (req, res) => {
+  const { m_start_roll, m_end_roll } = req.body;
+  console.log("Laser Real Body:", req.body);
   const isAdmin = req.session.isAdmin || false;
   try {
     // Query to fetch students within the roll range along with their marks and school info
     const query = `
-      SELECT s.roll,
-       s.name,
-       s.session,
-       s.year,
-       sch.name AS school_name,
-       m.theory_1,
-       m.theory_2,
-       m.prac_1,
-       m.prac_2,
-       m.division
-FROM student s
-JOIN school sch ON s.center_num = sch.code
-JOIN marks m ON s.roll = m.roll
-WHERE s.roll >= $1 AND s.roll <= $2
-  AND m.div != 0
-  ORDER BY s.roll;
+     WITH ranked_students AS (
+    SELECT 
+        s.roll,
+        s.name,
+        s.guard_name,
+        s.session,
+        s.subject,
+        s.district,
+        sch.name AS school_name,
+        m.marks,
+
+        -- Rank within the same subject and school
+        DENSE_RANK() OVER (
+            PARTITION BY s.subject, s.center_num  
+            ORDER BY m.marks DESC
+        ) AS subject_school_rank,
+
+        -- Rank across all schools for a particular subject
+        DENSE_RANK() OVER (
+            PARTITION BY s.subject
+            ORDER BY m.marks DESC
+        ) AS subject_overall_rank,
+
+        DENSE_RANK() OVER (
+            PARTITION BY s.subject, s.district
+            ORDER BY m.marks DESC
+        ) AS subject_district_rank
+
+    FROM 
+        student s
+    JOIN 
+        school sch ON s.center_num = sch.code
+    JOIN 
+        marks m ON s.roll = m.roll
+)
+SELECT * FROM ranked_students
+WHERE roll BETWEEN $1 AND $2
+ORDER BY 
+    SUBSTRING(roll FROM '([0-9]+)')::BIGINT ASC;
+
     `;
 
     // Execute the query with parameterized inputs to prevent SQL injection
-    const result = await db.query(query, [start_roll, end_roll + 'Z']);
-    if (result.rows.length>0){
-      res.render("./reports/marksheet/marksheetPrint.ejs", { display: result.rows });
-    }
-    else{
-      res.send("No data found. Exit this tab");
-    }
+    const result = await db.query(query, [m_start_roll, m_end_roll + 'Z']);
+    // Send the result rows back in the response, rendering the marksheet template
+    res.render("./reports/marksheet/marksheetPrint.ejs", { display: result.rows });
   } catch (error) {
     console.error('Error executing query', error);
     res.render("./reports/marksheet/viewMarksheet.ejs", { admin: isAdmin, error_message: error });
@@ -803,6 +824,7 @@ WHERE s.roll >= $1 AND s.roll <= $2
 });
 app.post("/printMarksheetLaser", async (req, res) => {
   const { m_start_roll, m_end_roll } = req.body;
+  console.log("Normal Body:", req.body);
   const isAdmin = req.session.isAdmin || false;
   try {
     // Query to fetch students within the roll range along with their marks and school info

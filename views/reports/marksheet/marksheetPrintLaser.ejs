@@ -7,96 +7,90 @@
     <style>
         /* Set the paper size using cm */
         @page {
-            size: 23.4cm,20.3cm;
+            size: 21.20cm 20.50cm;
             margin: 0;
         }
-.text16 {
-    position: absolute;
-    top: 5.6cm; 
-    left: 7.0cm;
-}
+
         .text1 {
     position: absolute;
-    top:  6.8cm; 
-    left: 6.1cm;
+    top:  6.6cm; 
+    left: 6.3cm;
 }
 .text2 {
     position: absolute;
-    top: 7.6cm; /* Increased by 0.1cm more */
-    left: 5.1cm;
+    top: 7.4cm; /* Increased by 0.1cm more */
+    left: 5.3cm;
 }
 .text3 {
     position: absolute;
-    top: 8.4cm; /* Increased by 0.1cm more */
-    left: 2.9cm;
+    top: 8.3cm; /* Increased by 0.1cm more */
+    left: 3.5cm;
 }
 .text4 {
     position: absolute;
-    top: 8.4cm; /* Matches .text3 to maintain box levels */
-    left: 12.8cm;
+    top: 8.3cm; /* Matches .text3 to maintain box levels */
+    left: 13.3cm;
 }
 .text5 {
     position: absolute;
-    top: 9.25cm; /* Increased by 0.1cm */
-    left: 3.6cm;
+    top: 9.05cm; /* Increased by 0.1cm */
+    left: 3.8cm;
 }
 .text6 {
     position: absolute;
-    top: 10.2cm; /* Increased by 0.1cm */
-    left: 4.6cm;
+    top: 10.0cm; /* Increased by 0.1cm */
+    left: 4.9cm;
 }
 .text7 {
     position: absolute;
-    top: 11.05cm; /* Increased by 0.1cm */
-    left: 3.6cm;
+    top: 10.85cm; /* Increased by 0.1cm */
+    left: 3.8cm;
 }
 
 .text8 {
     position: absolute;
-    top: 12.7cm; /* was 11cm */
+    top: 12.3cm; /* was 11cm */
     left: 5.5cm;
     font-weight: bold;
 }
 .text9 {
     position: absolute;
-    top: 13.9cm; /* was 11.7cm */
-    left: 3.2cm;
+    top: 13.5cm; /* was 11.7cm */
+    left: 3.0cm;
 }
 .text10 {
     position: absolute;
-    top: 13.9cm; /* was 11.7cm */
+    top: 13.5cm; /* was 11.7cm */
     left: 7.4cm;
 }
 .text11 {
     position: absolute;
-    top: 13.9cm; /* was 11.7cm */
+    top: 13.5cm; /* was 11.7cm */
     left: 11.8cm;
 }
 .text12 {
     position: absolute;
-    top: 15.1cm; /* was 12.4cm */
-    left: 3.2cm;
+    top: 14.7cm; /* was 12.4cm */
+    left: 3.0cm;
 }
 .text15 {
     position: absolute;
-    top: 15.1cm; /* was 12.4cm */
+    top: 14.7cm; /* was 12.4cm */
     left: 7.4cm;
 }
 .text13 {
     position: absolute;
-    top: 15.1cm; /* was 12.4cm */
+    top: 14.7cm; /* was 12.4cm */
     left: 11.8cm;
 }
 .text14 {
     position: absolute;
-    top: 19.0cm; /* was 14cm */
-    left: 15.8cm;
+    top: 18.6cm; /* was 14cm */
+    left: 15.2cm;
 }
 
         .font{
-            width:max-content;
-            height: max-content;
-            font-family: Arial, Helvetica, sans-serif;
+            font-family: "Courier New", monospace;
             font-size: 16px;
         }
         /* Modal styling */
@@ -135,150 +129,266 @@
 </head>
 <body>
 
-    
-    <div class="text1 font" id="text-content1" >DISTINCTION</div>
-    <div class="text2 font" id="text-content2" ></div>
-    <div class="text3 font" id="text-content3" ></div>
-    <div class="text4 font" id="text-content4" ></div>
-    <div class="text5 font" id="text-content5"></div>
-    <div class="text6 font" id="text-content6"></div>
-    <div class="text7 font" id="text-content7" ></div>
-    <div class="text8 font" id="text-content8" ></div>
-    <div class="text9 font" id="text-content9" ></div>
-    <div class="text10 font" id="text-content10" ></div>
-    <div class="text11 font" id="text-content11" ></div>
-    <div class="text12 font" id="text-content12" ></div>
-    <div class="text13 font" id="text-content13" ></div>
-    <div class="text14 font" id="text-content14" ></div>
-    <div class="text15 font" id="text-content15" ></div>
-    <div class="text16 font" id="text-content16" ></div>
-    <!-- Custom Modal Dialog -->
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-            <p>Do you want to print the next document?</p>
-            <button id="yesBtn">Yes</button>
-            <button id="noBtn">No</button>
-        </div>
-    </div>
-    <textarea id="studentData" style="display: none;"><%- JSON.stringify(display) %></textarea>
-    <script>
-        // Wait for the DOM to be fully loaded before running the script
-        document.addEventListener('DOMContentLoaded', function() {
-    // Get the data from the hidden textarea
-    const studentData = document.getElementById('studentData').value;
+<div class="text1 font" id="text-content1"></div>
+<div class="text2 font" id="text-content2"></div>
+<div class="text3 font" id="text-content3"></div>
+<div class="text4 font" id="text-content4"></div>
+<div class="text5 font" id="text-content5"></div>
+<div class="text6 font" id="text-content6"></div>
+<div class="text7 font" id="text-content7"></div>
+<div class="text8 font" id="text-content8"></div>
+<div class="text9 font" id="text-content9"></div>
+<div class="text10 font" id="text-content10"></div>
+<div class="text11 font" id="text-content11"></div>
+<div class="text12 font" id="text-content12"></div>
+<div class="text13 font" id="text-content13"></div>
+<div class="text14 font" id="text-content14"></div>
+<div class="text15 font" id="text-content15"></div>
+<div class="text16 font" id="text-content16"></div>
 
-    // Parse the JSON data
+<!-- Modal -->
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <p>Do you want to print the next document?</p>
+        <button id="yesBtn">Yes</button>
+        <button id="noBtn">No</button>
+    </div>
+</div>
+
+<textarea id="studentData" style="display:none;">
+<%- JSON.stringify(display) %>
+</textarea>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const studentData =
+        document.getElementById('studentData').value;
+
     const students = JSON.parse(studentData);
 
     let currentDocIndex = 0;
 
-    // Function to open the modal and wait for user response
     function openModal() {
-        return new Promise((resolve) => {
-            const modal = document.getElementById("myModal");
-            const yesBtn = document.getElementById("yesBtn");
-            const noBtn = document.getElementById("noBtn");
 
-            modal.style.display = "flex";  // Show modal
+        return new Promise((resolve) => {
+
+            const modal =
+                document.getElementById("myModal");
+
+            const yesBtn =
+                document.getElementById("yesBtn");
+
+            const noBtn =
+                document.getElementById("noBtn");
+
+            modal.style.display = "flex";
 
             yesBtn.onclick = () => {
-                modal.style.display = "none";  // Hide modal
-                resolve(true);  // User clicked "Yes"
+                modal.style.display = "none";
+                resolve(true);
             };
 
             noBtn.onclick = () => {
-                modal.style.display = "none";  // Hide modal
-                resolve(false);  // User clicked "No"
+                modal.style.display = "none";
+                resolve(false);
             };
+
         });
+
     }
 
-    // Function to load the document content and print it
-    function loadAndPrintDocument() {
-        if (currentDocIndex < students.length) {
-            // Load content from the current document
-        // Student data
-        document.getElementById('text-content1').innerHTML = "<strong>" + students[currentDocIndex].name + "</strong>";
+    function postDate() {
 
-        document.getElementById('text-content2').innerHTML = "<strong>"+students[currentDocIndex].guard_name + "</strong>";
-        
-        // Extract class - handle numeric and text classes (Lower Nursery, Upper Nursery)
+        const d = new Date();
+
+        return (
+            d.getDate() +
+            "." +
+            (d.getMonth() + 1) +
+            "." +
+            d.getFullYear()
+        );
+
+    }
+
+    function loadAndPrintDocument() {
+
+        if (currentDocIndex >= students.length) {
+
+            alert("No more documents to print.");
+            return;
+
+        }
+
+        const student = students[currentDocIndex];
+
+        // =========================
+        // CLASS EXTRACTION
+        // =========================
+
         let classValue;
-        const subject = students[currentDocIndex].subject;
+
+        const subject = student.subject;
+
         if (/lower\s*nursery/i.test(subject)) {
+
             classValue = "Lower Nursery";
-        } else if (/upper\s*nursery/i.test(subject)) {
+
+        }
+        else if (/upper\s*nursery/i.test(subject)) {
+
             classValue = "Upper Nursery";
-        } 
+
+        }
         else if (/kg/i.test(subject)) {
+
             classValue = "KG";
+
         }
         else {
-            const numMatch = subject.match(/(\d+)/);
-            classValue = numMatch ? numMatch[0] : "N/A";
+
+            const numMatch =
+                subject.match(/(\d+)/);
+
+            classValue =
+                numMatch ? numMatch[0] : "N/A";
+
         }
-        
-        document.getElementById('text-content3').innerHTML = "<strong>" + classValue + "</strong>";
-        document.getElementById('text-content4').innerHTML = "<strong>"+students[currentDocIndex].roll + "</strong>";
-        document.getElementById('text-content5').innerHTML = "<strong>"+students[currentDocIndex].school_name + "</strong>";
-        document.getElementById('text-content8').textContent = "Student Performance Report ("+students[currentDocIndex].session+")"
-        document.getElementById('text-content9').textContent = "Total Marks - 100";
-        
-        // Extract subject name by removing numbers, "Lower Nursery", and "Upper Nursery"
-        const subjectName = students[currentDocIndex].subject
+
+        // =========================
+        // SUBJECT NAME
+        // =========================
+
+        const subjectName = subject
             .replace(/[0-9]/g, "")
             .replace(/lower\s*nursery/gi, "")
             .replace(/upper\s*nursery/gi, "")
             .replace(/kg/gi, "")
             .trim();
-        
-        document.getElementById('text-content6').innerHTML = "<strong>Talent Search " + subjectName + " Olympiad, Class " + classValue + "</strong>";
-        const district = students[currentDocIndex].district;
-        const formattedDistrict = district.charAt(0).toUpperCase() + district.slice(1).toLowerCase();
 
-        document.getElementById('text-content7').innerHTML = "<strong>" + formattedDistrict + ", West Bengal" + "</strong>";
-        // classValue already extracted above, no need to re-extract
-        let p
-        p = students[currentDocIndex].marks;
-    
-        document.getElementById('text-content10').textContent = "Marks Scored - "+students[currentDocIndex].marks;
-        document.getElementById('text-content11').textContent = "Percentile Score - "+p+"%";
-        // Current date
-        function postDate() {
-            const d = new Date();
-            let date = d.getDate() + "." + (d.getMonth() + 1) + "." + d.getFullYear();
-            return date;
-            };  // Format date as MM/DD/YYYY
-        document.getElementById('text-content12').textContent = "Class Rank - "+students[currentDocIndex].subject_school_rank;
-        document.getElementById('text-content15').textContent = "District Rank - "+students[currentDocIndex].subject_school_rank;
-        document.getElementById('text-content13').textContent = "State Rank - "+students[currentDocIndex].subject_overall_rank;            
-        document.getElementById('text-content14').textContent = "Date - "+ postDate();            
-            // Open print dialog and wait for the user to finish printing
-            setTimeout(() => {
-                window.print();
+        // =========================
+        // DISTRICT
+        // =========================
 
-                // After the print dialog, wait for the user's confirmation with custom modal
-                setTimeout(async () => {
-                    let userResponse = await openModal();
-                    if (userResponse) {
-                        currentDocIndex++; // Move to the next document
-                        loadAndPrintDocument(); // Load and print next document
-                    } else {
-                        alert("Printing stopped.");
-                    }
-                }, 500); // Increased delay to 1000ms (1 second) for the modal
-            }, 1000); // Increased delay to 2000ms (2 seconds) before opening the print dialog
-        } else {
-            alert("No more documents to print.");
-        }
+        const district = student.district;
+
+        const formattedDistrict =
+            district.charAt(0).toUpperCase() +
+            district.slice(1).toLowerCase();
+
+        // =========================
+        // MARKS
+        // =========================
+
+        let p = student.marks;
+
+        // =========================
+        // LOAD FIELDS
+        // =========================
+
+        document.getElementById('text-content1').textContent =
+            student.name;
+
+        document.getElementById('text-content2').textContent =
+            student.guard_name;
+
+        document.getElementById('text-content3').textContent =
+            classValue;
+
+        document.getElementById('text-content4').textContent =
+            student.roll;
+
+        document.getElementById('text-content5').textContent =
+            student.school_name;
+
+        document.getElementById('text-content6').textContent =
+            "Talent Search " +
+            subjectName +
+            " Olympiad, Class " +
+            classValue;
+
+        document.getElementById('text-content7').textContent =
+            formattedDistrict +
+            ", West Bengal";
+
+        document.getElementById('text-content8').textContent =
+            "Student Performance Report (" +
+            student.session +
+            ")";
+
+        document.getElementById('text-content9').textContent =
+            "Total Marks - 100";
+
+        document.getElementById('text-content10').textContent =
+            "Marks Scored - " +
+            student.marks;
+
+        document.getElementById('text-content11').textContent =
+            "Percentile Score - " +
+            p +
+            "%";
+
+        document.getElementById('text-content12').textContent =
+            "Class Rank - " +
+            student.subject_school_rank;
+
+        document.getElementById('text-content13').textContent =
+            "State Rank - " +
+            student.subject_overall_rank;
+
+        document.getElementById('text-content14').textContent =
+            "Date - " +
+            postDate();
+
+        document.getElementById('text-content15').textContent =
+            "District Rank - " +
+            student.subject_school_rank;
+
+
+        // =========================
+        // PRINT
+        // =========================
+
+        setTimeout(() => {
+
+            window.print();
+
+            setTimeout(async () => {
+
+                const proceed =
+                    await openModal();
+
+                if (proceed) {
+
+                    currentDocIndex++;
+                    loadAndPrintDocument();
+
+                }
+                else {
+
+                    alert("Printing stopped.");
+
+                }
+
+            }, 500);
+
+        }, 1000);
+
     }
 
-    // Automatically load and print the first document on page load
-    window.onload = function() {
-        loadAndPrintDocument();
-    };
-});
+    // =========================
+    // START
+    // =========================
 
-    </script>
+    window.onload = function () {
+
+        loadAndPrintDocument();
+
+    };
+
+});
+</script>
+
 </body>
 </html>

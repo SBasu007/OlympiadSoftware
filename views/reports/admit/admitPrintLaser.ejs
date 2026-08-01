@@ -8,50 +8,50 @@
     <style>
         /* Set the paper size using cm */
         @page {
-            size: 19.8cm 10.2cm;
+            size: 19.6cm 9.9cm; /* 19.6cm, 9.9cm*/
             margin: 0;
         }
 
         .text1 {
             position: absolute;
-            top: 3.4cm; 
+            top: 2.9cm; 
             left: 3.6cm;
         }
          .text2 {
             position: absolute;
-            top: 4.5cm; 
+            top: 4.0cm; 
             left: 14cm;
         }
         .text3 {
             position: absolute;
-            top: 4.5cm; 
+            top: 4.0cm; 
             left: 3.6cm;
             
         }
         .text4 {
             position: absolute;
-            top: 5.5cm; 
+            top: 5.0cm; 
             left: 3.6cm;
         }
         
         .text5 {
             position: absolute;
-            top: 5.5cm; 
+            top: 5.0cm; 
             left: 14cm;
         }
         .text6 {
             position: absolute;
-            top: 6.5cm; 
+            top: 6.0cm; 
             left: 3.6cm;
         }
         .text7 {
             position: absolute;
-            top: 7.5cm; 
+            top: 7.0cm; 
             left: 3.6cm;
         }
         .text8 {
             position: absolute;
-            top: 8.4cm; 
+            top: 7.9cm; 
             left: 6.9cm;
         }
         
@@ -59,6 +59,7 @@
             width:max-content;
             height: max-content;
             font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
         }
         /* Modal styling */
         .modal {
@@ -151,35 +152,40 @@
         if (currentDocIndex < students.length) {
             // Load content from the current document
             
-            // Extract class - handle numeric and text classes (Lower Nursery, Upper Nursery)
-            let classValue;
-            const subject = students[currentDocIndex].subject;
-            if (/lower\s*nursery/i.test(subject)) {
-                classValue = "Lower Nursery";
-            } else if (/upper\s*nursery/i.test(subject)) {
-                classValue = "Upper Nursery";
-            } 
-            else if (/kg/i.test(subject)) {
-            classValue = "KG";
-        }else {
-                const numMatch = subject.match(/(\d+)/);
-                classValue = numMatch ? numMatch[0] : "N/A";
-            }
-            
-            // Extract subject name by removing numbers, "Lower Nursery", and "Upper Nursery"
-            const subjectName = students[currentDocIndex].subject
-                .replace(/[0-9]/g, "")
-                .replace(/lower\s*nursery/gi, "")
-                .replace(/upper\s*nursery/gi, "")
-                .replace(/kg/gi, "")
-                .trim();
-            
+// Extract class - handle numeric and text classes
+let classValue;
+const subject = students[currentDocIndex].subject;
+
+if (/lower\s*nursery/i.test(subject)) {
+    classValue = "Lower Nursery";
+} else if (/upper\s*nursery/i.test(subject)) {
+    classValue = "Upper Nursery";
+} else if (/\blkg\b/i.test(subject)) {
+    classValue = "LKG";
+} else if (/\bukg\b/i.test(subject)) {
+    classValue = "UKG";
+} else if (/\bnursery\b/i.test(subject)) {
+    classValue = "Nursery";
+} else if (/\bkg\b/i.test(subject)) {
+    classValue = "KG";
+} else {
+    const numMatch = subject.match(/(\d+)/);
+    classValue = numMatch ? numMatch[0] : "N/A";
+}
+
+// Extract subject name
+const subjectName = subject
+    .replace(/[0-9]/g, "")
+    .replace(/\b(lower\s*nursery|upper\s*nursery|lkg|ukg|nursery|kg)\b/gi, "")
+    .replace(/\s+/g, " ")
+    .trim();
+    
             document.getElementById('text-content1').textContent = "Subject - Talent Search " + subjectName + " Olympiad, Class " + classValue;
             document.getElementById('text-content2').textContent = "Roll - " + students[currentDocIndex].roll;
             document.getElementById('text-content3').textContent = "Name - " + students[currentDocIndex].name;
             document.getElementById('text-content4').textContent = "Guardian Name - " + students[currentDocIndex].guard_name;
             document.getElementById('text-content6').textContent = "School Name - " + students[currentDocIndex].school_name;
-            document.getElementById('text-content5').textContent = "Sch. Code - " + students[currentDocIndex].school_code;
+            document.getElementById('text-content5').textContent = "School Code - " + students[currentDocIndex].school_code;
             document.getElementById('text-content7').textContent =  "Center Address - "+students[currentDocIndex].school_address_line1;
             if (students[currentDocIndex].school_address_line2 != null) {
                 document.getElementById('text-content8').textContent =  students[currentDocIndex].school_address_line2;

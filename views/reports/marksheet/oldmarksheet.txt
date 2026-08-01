@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Print Document in cm</title>
+    <style>
+        /* Set the paper size using cm */
+* {
+    box-sizing: border-box;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+        @page {
+    size: 21.2cm 20.5cm;
+    margin: 0;
+}
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+.text16 {
+    position: absolute;
+    top: 5.6cm; 
+    left: 7.0cm;
+}
+        .text1 {
+    position: absolute;
+    top:  6.8cm; 
+    left: 6.1cm;
+}
+.text2 {
+    position: absolute;
+    top: 7.6cm; /* Increased by 0.1cm more */
+    left: 5.1cm;
+}
+.text3 {
+    position: absolute;
+    top: 8.4cm; /* Increased by 0.1cm more */
+    left: 2.9cm;
+}
+.text4 {
+    position: absolute;
+    top: 8.4cm; /* Matches .text3 to maintain box levels */
+    left: 12.8cm;
+}
+.text5 {
+    position: absolute;
+    top: 9.25cm; /* Increased by 0.1cm */
+    left: 3.6cm;
+}
+.text6 {
+    position: absolute;
+    top: 10.2cm; /* Increased by 0.1cm */
+    left: 4.6cm;
+}
+.text7 {
+    position: absolute;
+    top: 11.05cm; /* Increased by 0.1cm */
+    left: 3.6cm;
+}
+
+.text8 {
+    position: absolute;
+    top: 12.7cm; /* was 11cm */
+    left: 5.5cm;
+    font-weight: bold;
+}
+.text9 {
+    position: absolute;
+    top: 13.9cm; /* was 11.7cm */
+    left: 3.2cm;
+}
+.text10 {
+    position: absolute;
+    top: 13.9cm; /* was 11.7cm */
+    left: 7.4cm;
+}
+.text11 {
+    position: absolute;
+    top: 13.9cm; /* was 11.7cm */
+    left: 11.8cm;
+}
+.text12 {
+    position: absolute;
+    top: 15.1cm; /* was 12.4cm */
+    left: 3.2cm;
+}
+.text15 {
+    position: absolute;
+    top: 15.1cm; /* was 12.4cm */
+    left: 7.4cm;
+}
+.text13 {
+    position: absolute;
+    top: 15.1cm; /* was 12.4cm */
+    left: 11.8cm;
+}
+.text14 {
+    position: absolute;
+    top: 19.0cm; /* was 14cm */
+    left: 15.8cm;
+}
+
+        .font{
+            font-family: "Courier New", monospace;
+            font-size: 16px;
+        }
+        /* Modal styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 300px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        .modal-content button {
+            margin: 10px;
+            padding: 10px 20px;
+        }
+
+        .modal-content button:hover {
+            cursor: pointer;
+            background-color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="text1 font" id="text-content1" >DISTINCTION</div>
+    <div class="text2 font" id="text-content2" ></div>
+    <div class="text3 font" id="text-content3" ></div>
+    <div class="text4 font" id="text-content4" ></div>
+    <div class="text5 font" id="text-content5"></div>
+    <div class="text6 font" id="text-content6"></div>
+    <div class="text7 font" id="text-content7" ></div>
+    <div class="text8 font" id="text-content8" ></div>
+    <div class="text9 font" id="text-content9" ></div>
+    <div class="text10 font" id="text-content10" ></div>
+    <div class="text11 font" id="text-content11" ></div>
+    <div class="text12 font" id="text-content12" ></div>
+    <div class="text13 font" id="text-content13" ></div>
+    <div class="text14 font" id="text-content14" ></div>
+    <div class="text15 font" id="text-content15" ></div>
+    <div class="text16 font" id="text-content16" ></div>
+   
+    <!-- Custom Modal Dialog -->
+    <!-- <div id="myModal" class="modal">
+        <div class="modal-content">
+            <p>Do you want to print the next document?</p>
+            <button id="yesBtn">Yes</button>
+            <button id="noBtn">No</button>
+        </div>
+    </div> -->
+    <textarea id="studentData" style="display: none;"><%- JSON.stringify(display) %></textarea>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    // Get the data from the hidden textarea
+    const studentData = document.getElementById('studentData').value;
+
+    // Parse JSON data
+    const students = JSON.parse(studentData);
+
+    let currentDocIndex = 0;
+
+    // =========================
+    // LOAD + PRINT FUNCTION
+    // =========================
+    function loadAndPrintDocument() {
+
+        if (currentDocIndex < students.length) {
+
+            // =========================
+            // LOAD DATA INTO FIELDS
+            // =========================
+
+            document.getElementById('text-content1').textContent =
+                students[currentDocIndex].name;
+
+            document.getElementById('text-content2').textContent =
+                students[currentDocIndex].guard_name;
+
+            // Extract class
+            let classValue;
+            const subject = students[currentDocIndex].subject;
+
+            if (/lower\s*nursery/i.test(subject)) {
+                classValue = "Lower Nursery";
+            }
+            else if (/upper\s*nursery/i.test(subject)) {
+                classValue = "Upper Nursery";
+            }
+            else if (/kg/i.test(subject)) {
+                classValue = "KG";
+            }
+            else {
+                const numMatch = subject.match(/(\d+)/);
+                classValue = numMatch ? numMatch[0] : "N/A";
+            }
+
+            document.getElementById('text-content3').textContent =
+                classValue;
+
+            document.getElementById('text-content4').textContent =
+                students[currentDocIndex].roll;
+
+            document.getElementById('text-content5').textContent =
+                students[currentDocIndex].school_name;
+
+            // Subject name
+            const subjectName = students[currentDocIndex].subject
+                .replace(/[0-9]/g, "")
+                .replace(/lower\s*nursery/gi, "")
+                .replace(/upper\s*nursery/gi, "")
+                .replace(/kg/gi, "")
+                .trim();
+
+            document.getElementById('text-content6').textContent =
+                "Talent Search " +
+                subjectName +
+                " Olympiad, Class " +
+                classValue;
+
+            // District
+            const district = students[currentDocIndex].district;
+
+            const formattedDistrict =
+                district.charAt(0).toUpperCase() +
+                district.slice(1).toLowerCase();
+
+            document.getElementById('text-content7').textContent =
+                formattedDistrict + ", West Bengal";
+
+            // Performance report
+            document.getElementById('text-content8').textContent =
+                "Student Performance Report (" +
+                students[currentDocIndex].session +
+                ")";
+
+            document.getElementById('text-content9').textContent =
+                "Total Marks - 100";
+
+            let p = students[currentDocIndex].marks;
+
+            document.getElementById('text-content10').textContent =
+                "Marks Scored - " +
+                students[currentDocIndex].marks;
+
+            document.getElementById('text-content11').textContent =
+                "Percentile Score - " +
+                p +
+                "%";
+
+            // Date
+            function postDate() {
+                const d = new Date();
+
+                let date =
+                    d.getDate() +
+                    "." +
+                    (d.getMonth() + 1) +
+                    "." +
+                    d.getFullYear();
+
+                return date;
+            }
+
+            document.getElementById('text-content12').textContent =
+                "Class Rank - " +
+                students[currentDocIndex].subject_school_rank;
+
+            document.getElementById('text-content15').textContent =
+                "District Rank - " +
+                students[currentDocIndex].subject_school_rank;
+
+            document.getElementById('text-content13').textContent =
+                "State Rank - " +
+                students[currentDocIndex].subject_overall_rank;
+
+            document.getElementById('text-content14').textContent =
+                "Date - " +
+                postDate();
+
+            // =========================
+            // PRINT
+            // =========================
+
+            setTimeout(() => {
+                window.print();
+            }, 500);
+
+        } else {
+
+            alert("No more documents to print.");
+
+        }
+    }
+
+    // =========================
+    // AFTER PRINT
+    // =========================
+    window.onafterprint = () => {
+
+        const proceed = confirm("Print next document?");
+
+        if (proceed) {
+
+            currentDocIndex++;
+
+            if (currentDocIndex < students.length) {
+
+                loadAndPrintDocument();
+
+            } else {
+
+                alert("No more documents to print.");
+
+            }
+
+        } else {
+
+            alert("Printing stopped.");
+
+        }
+    };
+
+    // =========================
+    // START PRINTING
+    // =========================
+    window.onload = function () {
+        loadAndPrintDocument();
+    };
+
+});
+</script>
+</body>
+</html>
