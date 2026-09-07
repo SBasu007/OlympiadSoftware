@@ -307,7 +307,7 @@ app.get("/editStudent", (req,res) => {
   res.render("./student/editStudent.ejs",{admin:isAdmin})
 }); 
 app.post("/editStudent", async (req, res) => {
-  const { roll, session, year, code, date, name, guard_name, lang, mode, district } = req.body;
+  const { roll, session, year, code, date, name, guard_name, lang, mode, district, state } = req.body;
   const isAdmin = req.session.isAdmin || false;
 
   // SQL query to update student details
@@ -322,11 +322,12 @@ app.post("/editStudent", async (req, res) => {
       guard_name = $6, 
       stream = $7,
       mode= $8,
-      district= $9
-    WHERE roll = $10`;
+      district= $9,
+      state= $10
+    WHERE roll = $11`;
 
   try {
-    const result = await db.query(query, [session, year, code, date, name, guard_name, lang, mode, district.toUpperCase(), roll]);
+    const result = await db.query(query, [session, year, code, date, name, guard_name, lang, mode, district.toUpperCase(), state.toUpperCase(), roll]);
 
     // Check if any rows were affected (i.e., if the update was successful)
     if (result.rowCount > 0) {
@@ -375,15 +376,15 @@ app.post('/deleteStudent', async (req, res) => {
 });
 
 app.post("/addStudent", async (req, res) => {
-  const { roll, session, year, code, date, name, guard_name, district, lang, mode } = req.body;
+  const { roll, session, year, code, date, name, guard_name, district, state, lang, mode } = req.body;
   const isAdmin = req.session.isAdmin || false;
 
   // SQL query to insert student details
-  const query = `INSERT INTO student (roll, session, subject, center_num, admission_date, name, guard_name, stream, mode, district)
-                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`;
+  const query = `INSERT INTO student (roll, session, subject, center_num, admission_date, name, guard_name, stream, mode, district, state)
+                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`;
 
   try {
-    await db.query(query, [roll, session, year, code, date, name, guard_name, lang, mode, district.toUpperCase()]);
+    await db.query(query, [roll, session, year, code, date, name, guard_name, lang, mode, district.toUpperCase(), state.toUpperCase()]);
     res.render('./student/addStudent.ejs', { error_message: "Student added successfully", admin: isAdmin, session , year, code, district });
   } catch (err) {
       res.render('./student/addStudent.ejs', { error_message: err, admin: isAdmin });
@@ -779,6 +780,7 @@ app.post("/printMarksheetLaserReal", async (req, res) => {
         s.session,
         s.subject,
         s.district,
+        s.state,
         sch.name AS school_name,
         m.marks,
 
@@ -837,6 +839,7 @@ app.post("/printMarksheetLaser", async (req, res) => {
         s.session,
         s.subject,
         s.district,
+        s.state,
         sch.name AS school_name,
         m.marks,
 

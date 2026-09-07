@@ -225,7 +225,10 @@
         const district = students[currentDocIndex].district;
         const formattedDistrict = district.charAt(0).toUpperCase() + district.slice(1).toLowerCase();
 
-        document.getElementById('text-content6').innerHTML = "District : <strong>" + formattedDistrict + ", West Bengal" + "</strong>";
+        const state = students[currentDocIndex].state;
+        const formattedState = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+        document.getElementById('text-content6').innerHTML = "District : <strong>" + formattedDistrict + ", "+ formattedState + "</strong>";
         // classValue already extracted above, no need to re-extract
         let p
         p = students[currentDocIndex].marks;

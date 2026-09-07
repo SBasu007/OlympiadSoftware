@@ -80,6 +80,26 @@
               <option value="Purulia" <%= typeof district !== 'undefined' && district === 'Purulia' ? 'selected' : '' %>>Purulia</option>
               <option value="South 24 Parganas" <%= typeof district !== 'undefined' && district === 'South 24 Parganas' ? 'selected' : '' %>>South 24 Parganas</option>
               <option value="Uttar Dinajpur" <%= typeof district !== 'undefined' && district === 'Uttar Dinajpur' ? 'selected' : '' %>>Uttar Dinajpur</option>
+              <option value="Kamrup" <%= typeof district !== 'undefined' && district === 'Kamrup' ? 'selected' : '' %>>Kamrup(Assam)</option>
+              <option value="Bangalore" <%= typeof district !== 'undefined' && district === 'Bangalore' ? 'selected' : '' %>>Bangalore(Karnataka)</option>
+              <option value="Bhadrak" <%= typeof district !== 'undefined' && district === 'Bhadrak' ? 'selected' : '' %>>Bhadrak(Odisha)</option>
+              <option value="Kendujhar" <%= typeof district !== 'undefined' && district === 'Kendujhar' ? 'selected' : '' %>>Kendujhar(Odisha)</option>
+              <option value="Kandhamal" <%= typeof district !== 'undefined' && district === 'Kandhamal' ? 'selected' : '' %>>Kandhamal(Odisha)</option>
+              <option value="Bhanadara" <%= typeof district !== 'undefined' && district === 'Bhanadara' ? 'selected' : '' %>>Bhanadara(Maharashtra)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-row-element">
+            <label class="student-label" for="state">STATE<span style="color:red">*</span></label>
+            <select class="student-input" id="state" name="state" required>
+              <option value="" disabled <%= typeof state === 'undefined' ? 'selected' : '' %>>Select a state</option>
+              <option value="West Bengal" <%= typeof state !== 'undefined' && state === 'West Bengal' ? 'selected' : '' %>>West Bengal</option>
+              <option value="Karnataka" <%= typeof state !== 'undefined' && state === 'Karnataka' ? 'selected' : '' %>>Karnataka</option>
+              <option value="Odisha" <%= typeof state !== 'undefined' && state === 'Odisha' ? 'selected' : '' %>>Odisha</option>
+              <option value="Maharashtra" <%= typeof state !== 'undefined' && state === 'Maharashtra' ? 'selected' : '' %>>Maharashtra</option>
+              <option value="Madhya Pradesh" <%= typeof state !== 'undefined' && state === 'Madhya Pradesh' ? 'selected' : '' %>>Madhya Pradesh</option>
+              <option value="Assam" <%= typeof state !== 'undefined' && state === 'Assam' ? 'selected' : '' %>>Assam</option>
             </select>
           </div>
         </div>

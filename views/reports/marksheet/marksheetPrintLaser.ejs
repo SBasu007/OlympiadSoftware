@@ -271,12 +271,13 @@ document.addEventListener('DOMContentLoaded', function () {
         // DISTRICT
         // =========================
 
-        const district = student.district;
+        const district = students[currentDocIndex].district;
+        const formattedDistrict = district.charAt(0).toUpperCase() + district.slice(1).toLowerCase();
 
-        const formattedDistrict =
-            district.charAt(0).toUpperCase() +
-            district.slice(1).toLowerCase();
+        const state = students[currentDocIndex].state;
+        const formattedState = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
 
+        
         // =========================
         // MARKS
         // =========================
@@ -308,9 +309,8 @@ document.addEventListener('DOMContentLoaded', function () {
             " Olympiad, Class " +
             classValue;
 
-        document.getElementById('text-content7').textContent =
-            formattedDistrict +
-            ", West Bengal";
+        document.getElementById('text-content7').textContent = formattedDistrict + ", "+ formattedState;
+
 
         document.getElementById('text-content8').textContent =
             "Student Performance Report (" +
