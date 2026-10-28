@@ -1,13 +1,17 @@
+
 <%
+let totalBengaliStudents = 0;
+let totalEnglishStudents = 0;
 let totalStudents = 0;
 let totalFees = 0;
-let centerFee = 0;
+
+const bengaliRate = 100;
+const englishRate = 150;
 
 function postDate() {
     const d = new Date();
-    let date = d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
-    return date;
-}; 
+    return d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
+}
 %>
 
 <!DOCTYPE html>
@@ -16,6 +20,7 @@ function postDate() {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fee Receipt</title>
+
     <style>
         body {
             font-family: 'Courier New', Courier, monospace;
@@ -23,29 +28,36 @@ function postDate() {
             padding: 40px;
             font-size: 15px;
         }
+
         h2 {
             text-align: center;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 40px;
         }
+
         th {
             border-top: 1px dashed black;
             border-bottom: 1px dashed black;
         }
+
         th, td {
             padding: 8px;
             text-align: center;
         }
+
         .row1, .row3 {
             display: flex;
             justify-content: space-between;
         }
-        .row3{
-            margin-bottom:15px;
+
+        .row3 {
+            margin-bottom: 15px;
         }
+
         .signature {
             margin-top: 20px;
             margin-left: 40px;
@@ -54,74 +66,116 @@ function postDate() {
             border-top: 1px dotted black;
             width: max-content;
         }
+
+        .grand-total td {
+            font-weight: bold;
+            border-top: 1px dashed black;
+        }
+
+        @media print {
+            body {
+                padding: 20px;
+            }
+        }
     </style>
 </head>
+
 <body>
     <h2>FEE RECEIPT</h2>
+
     <div class="row1">
         <div class="content">Bill no.-</div>
         <div class="content">Date: <%= postDate() %></div>
     </div>
+
     <div class="row2">
-        <p>From: <u><%= school[0].name.toUpperCase() %></u></p>
-        <p>Address: <u><%= school[0].add1.toUpperCase() %></u></p>
-        <p>Address: <u><%= school[0].add2.toUpperCase() %></u></p>
+        <p>
+            From:
+            <u><%= school[0].name.toUpperCase() %></u>
+        </p>
+
+        <p>
+            Address:
+            <u><%= (school[0].add1 || '').toUpperCase() %></u>
+        </p>
+
+        <p>
+            Address:
+            <u><%= (school[0].add2 || '').toUpperCase() %></u>
+        </p>
     </div>
+
     <div class="row3">
         <div class="session">Session: <%= session %></div>
         <div class="code">Centre Code: <%= code.toUpperCase() %></div>
     </div>
+
     <table>
         <thead>
             <tr>
-                <th>Year</th>
-                <th>Rate/Student (Rs.)</th>
-                <th>No. of Students</th>
-                <th>Total</th>
+                <th>Subject</th>
+                <th>Bengali Students</th>
+                <th>English Students</th>
+                <th>Total Students</th>
+                <th>Bengali Fees (Rs.)</th>
+                <th>English Fees (Rs.)</th>
+                <th>Total (Rs.)</th>
             </tr>
         </thead>
+
         <tbody>
-            <% rows.forEach((row) => { 
-                totalStudents += parseInt(row.student_count, 10); // Convert student_count to an integer
-                totalFees += parseInt(row.student_count, 10) * parseFloat(row.fees); // Ensure fees are handled as numbers
+            <% rows.forEach((row) => {
+                const bengaliCount = Number(row.bengali_student_count) || 0;
+                const englishCount = Number(row.english_student_count) || 0;
+                const total = Number(row.total) || 0;
+
+                const bengaliFees = bengaliCount * bengaliRate;
+                const englishFees = englishCount * englishRate;
+                const subjectTotal = bengaliFees + englishFees;
+
+                totalBengaliStudents += bengaliCount;
+                totalEnglishStudents += englishCount;
+                totalStudents += total;
+                totalFees += subjectTotal;
             %>
-                <tr>
-                    <td><%= row.year %></td>
-                    <td><%= row.fees %></td>
-                    <td><%= row.student_count %></td>
-                    <td><%= row.student_count * row.fees %></td>
-                </tr>
+
+            <tr>
+                <td><%= row.subject %></td>
+                <td><%= bengaliCount %></td>
+                <td><%= englishCount %></td>
+                <td><%= total %></td>
+                <td><%= bengaliFees.toFixed(2) %></td>
+                <td><%= englishFees.toFixed(2) %></td>
+                <td><%= subjectTotal.toFixed(2) %></td>
+            </tr>
+
             <% }) %>
-            <!-- Row to show total students and total fees -->
-            <tr>
-                <td colspan="2" style="font-weight: bold;padding-left: 300px">Grand Total: </td>
-                <td style="font-weight: bold;"><%= totalStudents %></td>
-                <td style="font-weight: bold;"><%= totalFees %></td>
-            </tr>
-            <!-- Row to calculate and show the center fee -->
-            <%
-                centerFee = (totalFees * school[0].center_fee) / 100; // Calculate center fee percentage
-                let netAmount = totalFees - centerFee; // Calculate the net amount after subtracting center fee
-            %>
-            <tr>
-                <td colspan="3" style="font-weight: bold;padding-left: 300px">Center Fee (<%= school[0].center_fee %>%): </td>
-                <td style=""><%= centerFee.toFixed(2) %></td>
-            </tr>
-            <!-- Row to show the net amount -->
-            <tr>
-                <td colspan="3" style="font-weight: bold;padding-left: 300px">Net Amount: </td>
-                <td style=""><%= netAmount.toFixed(2) %></td>
+
+            <tr class="grand-total">
+                <td>Grand Total</td>
+                <td><%= totalBengaliStudents %></td>
+                <td><%= totalEnglishStudents %></td>
+                <td><%= totalStudents %></td>
+                <td><%= (totalBengaliStudents * bengaliRate).toFixed(2) %></td>
+                <td><%= (totalEnglishStudents * englishRate).toFixed(2) %></td>
+                <td><%= totalFees.toFixed(2) %></td>
             </tr>
         </tbody>
     </table>
+
+    <h3 style="text-align: right;">
+        Total Amount: Rs. <%= totalFees.toFixed(2) %>
+    </h3>
 
     <div class="signature">
         <p>Full Signature of collector</p>
     </div>
 </body>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         window.print();
     });
 </script>
+
 </html>

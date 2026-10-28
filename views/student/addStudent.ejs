@@ -114,8 +114,8 @@
           <div class="form-row-element">
             <label class="student-label" for="lang">LANGUAGE</label>
             <select class="" id="lang" name="lang">
-              <option value="english">English</option>
-              <option value="bengali">Bengali</option>
+              <option value="english" <%= typeof lang !== 'undefined' && lang === 'english' ? 'selected' : '' %>>English</option>
+              <option value="bengali" <%= typeof lang !== 'undefined' && lang === 'bengali' ? 'selected' : '' %>>Bengali</option>
             </select>
           </div>
         </div>

@@ -197,17 +197,35 @@
         document.getElementById('text-content2').innerHTML = "Guardian Name : <strong>"+students[currentDocIndex].guard_name + "</strong>";
         
         // Extract class - handle numeric and text classes (Lower Nursery, Upper Nursery)
+        // let classValue;
+        // const subject = students[currentDocIndex].subject;
+        // if (/lower\s*nursery/i.test(subject)) {
+        //     classValue = "Lower Nursery";
+        // } else if (/upper\s*nursery/i.test(subject)) {
+        //     classValue = "Upper Nursery";
+        // } else {
+        //     const numMatch = subject.match(/(\d+)/);
+        //     classValue = numMatch ? numMatch[0] : "N/A";
+        // }
         let classValue;
-        const subject = students[currentDocIndex].subject;
-        if (/lower\s*nursery/i.test(subject)) {
-            classValue = "Lower Nursery";
-        } else if (/upper\s*nursery/i.test(subject)) {
-            classValue = "Upper Nursery";
-        } else {
-            const numMatch = subject.match(/(\d+)/);
-            classValue = numMatch ? numMatch[0] : "N/A";
-        }
-        
+const subject = students[currentDocIndex].subject;
+
+const classMatch = subject.match(
+    /(lower\s*nursery|upper\s*nursery|nursery|lkg|kids|ukg|kg|\d+)$/i
+);
+
+if (classMatch) {
+    classValue = classMatch[1].toUpperCase();
+} else {
+    classValue = "N/A";
+}
+
+// Extract subject name
+const subjectName = subject
+    .replace(/[0-9]/g, "")
+    .replace(/\b(lower\s*nursery|upper\s*nursery|lkg|ukg|nursery|kg|kids)\b/gi, "")
+    .replace(/\s+/g, " ")
+    .trim();
         document.getElementById('text-content3').innerHTML = "Class : <strong>" + classValue + "</strong>";
         document.getElementById('text-content4').innerHTML = "Roll : <strong>"+students[currentDocIndex].roll + "</strong>";
         document.getElementById('text-content5').innerHTML = "Appearing from : <strong>"+students[currentDocIndex].school_name + "</strong>";
@@ -215,11 +233,11 @@
         document.getElementById('text-content9').textContent = "Total Marks - 100";
         
         // Extract subject name by removing numbers, "Lower Nursery", and "Upper Nursery"
-        const subjectName = students[currentDocIndex].subject
-            .replace(/[0-9]/g, "")
-            .replace(/lower\s*nursery/gi, "")
-            .replace(/upper\s*nursery/gi, "")
-            .trim();
+        // const subjectName = students[currentDocIndex].subject
+        //     .replace(/[0-9]/g, "")
+        //     .replace(/lower\s*nursery/gi, "")
+        //     .replace(/upper\s*nursery/gi, "")
+        //     .trim();
         
         document.getElementById('text-content7').innerHTML = "Subject : <strong>Talent Search " + subjectName + " Olympiad, Class " + classValue + "</strong>";
         const district = students[currentDocIndex].district;

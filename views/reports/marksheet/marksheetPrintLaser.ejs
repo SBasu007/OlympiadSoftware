@@ -227,46 +227,65 @@ document.addEventListener('DOMContentLoaded', function () {
         // CLASS EXTRACTION
         // =========================
 
+        // let classValue;
+
+        // const subject = student.subject;
+
+        // if (/lower\s*nursery/i.test(subject)) {
+
+        //     classValue = "Lower Nursery";
+
+        // }
+        // else if (/upper\s*nursery/i.test(subject)) {
+
+        //     classValue = "Upper Nursery";
+
+        // }
+        // else if (/kg/i.test(subject)) {
+
+        //     classValue = "KG";
+
+        // }
+        // else {
+
+        //     const numMatch =
+        //         subject.match(/(\d+)/);
+
+        //     classValue =
+        //         numMatch ? numMatch[0] : "N/A";
+
+        // }
+
         let classValue;
+const subject = students[currentDocIndex].subject;
 
-        const subject = student.subject;
+const classMatch = subject.match(
+    /(lower\s*nursery|upper\s*nursery|nursery|lkg|kids|ukg|kg|\d+)$/i
+);
 
-        if (/lower\s*nursery/i.test(subject)) {
+if (classMatch) {
+    classValue = classMatch[1].toUpperCase();
+} else {
+    classValue = "N/A";
+}
 
-            classValue = "Lower Nursery";
-
-        }
-        else if (/upper\s*nursery/i.test(subject)) {
-
-            classValue = "Upper Nursery";
-
-        }
-        else if (/kg/i.test(subject)) {
-
-            classValue = "KG";
-
-        }
-        else {
-
-            const numMatch =
-                subject.match(/(\d+)/);
-
-            classValue =
-                numMatch ? numMatch[0] : "N/A";
-
-        }
 
         // =========================
         // SUBJECT NAME
         // =========================
 
-        const subjectName = subject
-            .replace(/[0-9]/g, "")
-            .replace(/lower\s*nursery/gi, "")
-            .replace(/upper\s*nursery/gi, "")
-            .replace(/kg/gi, "")
-            .trim();
+        // const subjectName = subject
+        //     .replace(/[0-9]/g, "")
+        //     .replace(/lower\s*nursery/gi, "")
+        //     .replace(/upper\s*nursery/gi, "")
+        //     .replace(/kg/gi, "")
+        //     .trim();
 
+        const subjectName = subject
+    .replace(/[0-9]/g, "")
+    .replace(/\b(lower\s*nursery|upper\s*nursery|lkg|ukg|nursery|kg|kids)\b/gi, "")
+    .replace(/\s+/g, " ")
+    .trim();
         // =========================
         // DISTRICT
         // =========================
@@ -318,31 +337,31 @@ document.addEventListener('DOMContentLoaded', function () {
             ")";
 
         document.getElementById('text-content9').textContent =
-            "Total Marks - 100";
+            "Total Marks-100";
 
         document.getElementById('text-content10').textContent =
-            "Marks Scored - " +
+            "Marks Scored-" +
             student.marks;
 
         document.getElementById('text-content11').textContent =
-            "Percentile Score - " +
+            "Percentile Score-" +
             p +
             "%";
 
         document.getElementById('text-content12').textContent =
-            "Class Rank - " +
+            "Class Rank-" +
             student.subject_school_rank;
 
         document.getElementById('text-content13').textContent =
-            "State Rank - " +
+            "State Rank-" +
             student.subject_overall_rank;
 
         document.getElementById('text-content14').textContent =
-            "Date - " +
+            "Date-" +
             postDate();
 
         document.getElementById('text-content15').textContent =
-            "District Rank - " +
+            "District Rank-" +
             student.subject_school_rank;
 
 

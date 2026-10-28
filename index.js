@@ -385,7 +385,7 @@ app.post("/addStudent", async (req, res) => {
 
   try {
     await db.query(query, [roll, session, year, code, date, name, guard_name, lang, mode, district.toUpperCase(), state.toUpperCase()]);
-    res.render('./student/addStudent.ejs', { error_message: "Student added successfully", admin: isAdmin, session , year, code, district });
+    res.render('./student/addStudent.ejs', { error_message: "Student added successfully", admin: isAdmin, session , year, code, district, state, lang  });
   } catch (err) {
       res.render('./student/addStudent.ejs', { error_message: err, admin: isAdmin });
   }
@@ -1228,13 +1228,96 @@ app.get("/viewResultSheet", async (req,res) => {
   const isAdmin = req.session.isAdmin || false;
   res.render("./reports/special/Result Sheet/viewResultSheet.ejs",{admin:isAdmin})
 });
-app.post("/printResultSheet", async(req,res) => {
-  const { session, code } = req.body;
+
+// app.post("/printResultSheet", async (req, res) => {
+//     const { session, code } = req.body;
+
+//     const query = `
+//         WITH ranked_students AS (
+//             SELECT
+//                 school.name AS school_name,
+//                 student.name AS student_name,
+//                 student.roll,
+//                 student.subject,
+//                 student.guard_name,
+//                 student.center_num,
+//                 student.district,
+//                 marks.marks,
+
+//                 DENSE_RANK() OVER (
+//                     PARTITION BY student.subject, student.center_num
+//                     ORDER BY marks.marks DESC
+//                 ) AS subject_school_rank,
+
+//                 DENSE_RANK() OVER (
+//                     PARTITION BY student.subject
+//                     ORDER BY marks.marks DESC
+//                 ) AS subject_overall_rank,
+
+//                 DENSE_RANK() OVER (
+//                     PARTITION BY student.subject, student.district
+//                     ORDER BY marks.marks DESC
+//                 ) AS subject_district_rank
+
+//             FROM student
+//             JOIN school
+//                 ON student.center_num = school.code
+//             JOIN marks
+//                 ON student.roll = marks.roll
+
+//             WHERE student.session = $1
+//         )
+
+//         SELECT *
+//         FROM ranked_students
+//         WHERE center_num = $2
+
+//         ORDER BY
+//             subject,
+//             subject_school_rank,
+//             SUBSTRING(roll FROM '([0-9]+)')::BIGINT ASC,
+//             roll;
+//     `;
+
+//     try {
+//         const result = await db.query(query, [session, code]);
+
+//         if (result.rows.length > 0) {
+//             return res.render(
+//                 './reports/special/Result Sheet/resultSheet.ejs',
+//                 {
+//                     rows: result.rows,
+//                     session,
+//                     code
+//                 }
+//             );
+//         }
+
+//         return res.send("No data found. Exit this tab");
+
+//     } catch (error) {
+//         console.error('Error executing query:', error);
+//         return res.status(500).send('Error retrieving data');
+//     }
+// });
+
+
+
+app.post("/printResultSheet", async (req, res) => {
+  const { session, code, stream } = req.body;
+
+  // Validate stream
+  const selectedStream = stream.toLowerCase();
+
+  if (!["english", "bengali", "all"].includes(selectedStream)) {
+    return res.status(400).send("Invalid stream selected");
+  }
+
   const query = `
     WITH ranked_students AS (
-    SELECT 
+      SELECT
         school.name AS school_name,
-        student.name AS student_name, 
+        student.name AS student_name,
         student.roll,
         student.subject,
         student.guard_name,
@@ -1242,59 +1325,71 @@ app.post("/printResultSheet", async(req,res) => {
         student.district,
         marks.marks,
 
-        -- Rank within the same subject and school (center)
+        -- Rank within the same subject and school
         DENSE_RANK() OVER (
-            PARTITION BY student.subject, student.center_num  
-            ORDER BY marks.marks DESC
+          PARTITION BY student.subject, student.center_num
+          ORDER BY marks.marks DESC
         ) AS subject_school_rank,
 
         -- Overall rank in the subject (state-level)
         DENSE_RANK() OVER (
-            PARTITION BY student.subject
-            ORDER BY marks.marks DESC
+          PARTITION BY student.subject
+          ORDER BY marks.marks DESC
         ) AS subject_overall_rank,
 
         -- Rank within the subject and district
         DENSE_RANK() OVER (
-            PARTITION BY student.subject, student.district
-            ORDER BY marks.marks DESC
-        ) AS subject_district_rank
+          PARTITION BY student.subject, student.district
+          ORDER BY marks.marks DESC
+        ) AS subject_district_rank,
 
-    FROM 
-        student
-    JOIN 
-        school ON student.center_num = school.code
-    JOIN 
-        marks ON student.roll = marks.roll
-    WHERE 
-        student.session = $1
-)
+        student.stream
 
--- Now filter to show only students from the desired center_num (school)
-SELECT *
-FROM ranked_students
-WHERE center_num = $2
-ORDER BY 
-    subject, 
-    subject_school_rank,
-    SUBSTRING(roll FROM '([0-9]+)')::BIGINT ASC, 
-    roll;
+      FROM student
+      JOIN school
+        ON student.center_num = school.code
+      JOIN marks
+        ON student.roll = marks.roll
+      WHERE student.session = $1
+    )
 
+    SELECT *
+    FROM ranked_students
+    WHERE center_num = $2
+      AND (
+        $3 = 'all'
+        OR LOWER(stream) = $3
+      )
+    ORDER BY
+      subject,
+      subject_school_rank,
+      SUBSTRING(roll FROM '([0-9]+)')::BIGINT ASC,
+      roll;
   `;
 
   try {
-    // Execute the query with the provided session and school_code
-    const result = await db.query(query, [session, code]);
-    if (result.rows.length>0){
-      res.render('./reports/special/Result Sheet/resultSheet.ejs', { rows: result.rows,session,code });
-    }
-    else{
+    const result = await db.query(query, [
+      session,
+      code,
+      selectedStream
+    ]);
+
+    if (result.rows.length > 0) {
+      res.render(
+        './reports/special/Result Sheet/resultSheet.ejs',
+        {
+          rows: result.rows,
+          session,
+          code,
+          stream: selectedStream
+        }
+      );
+    } else {
       res.send("No data found. Exit this tab");
     }
-    // Send the query result to the EJS view
   } catch (error) {
-    console.error('Error executing query:', error);
-    res.status(500).send('Error retrieving data');
+    console.error("Error executing query:", error);
+    res.status(500).send("Error retrieving data");
   }
 });
 
@@ -1302,37 +1397,84 @@ app.get("/viewBill", async (req,res) => {
   const isAdmin = req.session.isAdmin || false;
   res.render("./reports/special/Bill/viewBill.ejs",{admin:isAdmin})
 });
-app.post("/printBill", async(req,res) => {
+// CTSS Software Code
+// app.post("/printBill", async(req,res) => {
+//   const { session, code } = req.body;
+//   const query = `
+//     SELECT
+//         s.year,
+//         COUNT(s.roll) AS student_count,
+//         c.fees
+//     FROM
+//         student s
+//     JOIN
+//         school sch ON s.center_num = sch.code
+//     JOIN
+//         course c ON s.year = c.year
+//     WHERE
+//         sch.code = $1  -- Replace with the actual school code you're querying
+//         AND s.session = $2  -- Replace with the actual session you're querying
+//     GROUP BY
+//          s.year, c.fees
+//     ORDER BY
+//         s.year;
+//   `;
+
+//   try {
+//     // Execute the query with the provided session and school_code
+//     const result = await db.query(query, [code,session]);
+//     const school = await db.query('SELECT * FROM school where school.code = $1',[code])
+//     // Send the query result to the EJS view
+//     if (result.rows.length>0){
+//       res.render('./reports/special/Bill/bill.ejs', { rows: result.rows,school:school.rows, session, code });
+//     }
+//     else{
+//       res.send("No data found. Exit this tab");
+//     }
+//   } catch (error) {
+//     console.error('Error executing query:', error);
+//     res.status(500).send('Error retrieving data');
+//   }
+// });
+
+app.post("/printBill", async (req, res) => {
   const { session, code } = req.body;
+
   const query = `
     SELECT
-        s.year,
-        COUNT(s.roll) AS student_count,
-        c.fees
-    FROM
-        student s
-    JOIN
-        school sch ON s.center_num = sch.code
-    JOIN
-        course c ON s.year = c.year
-    WHERE
-        sch.code = $1  -- Replace with the actual school code you're querying
-        AND s.session = $2  -- Replace with the actual session you're querying
-    GROUP BY
-         s.year, c.fees
-    ORDER BY
-        s.year;
+        s.subject,
+        COUNT(*) FILTER (
+            WHERE LOWER(s.stream) = 'bengali'
+        ) AS bengali_student_count,
+        COUNT(*) FILTER (
+            WHERE LOWER(s.stream) = 'english'
+        ) AS english_student_count,
+        COUNT(*) AS total
+    FROM student s
+    JOIN school sch
+        ON s.center_num = sch.code
+    WHERE sch.code = $1
+      AND s.session = $2
+    GROUP BY s.subject
+    ORDER BY s.subject;
   `;
 
   try {
-    // Execute the query with the provided session and school_code
-    const result = await db.query(query, [code,session]);
-    const school = await db.query('SELECT * FROM school where school.code = $1',[code])
-    // Send the query result to the EJS view
-    if (result.rows.length>0){
-      res.render('./reports/special/Bill/bill.ejs', { rows: result.rows,school:school.rows, session, code });
-    }
-    else{
+    const result = await db.query(query, [code, session]);
+
+    const school = await db.query(
+      'SELECT * FROM school WHERE code = $1',
+      [code]
+    );
+
+    if (result.rows.length > 0) {
+      res.render('./reports/special/Bill/bill.ejs', {
+        rows: result.rows,
+        school: school.rows,
+        session,
+        code
+      });
+    } else {
       res.send("No data found. Exit this tab");
     }
   } catch (error) {
