@@ -87,6 +87,15 @@
     position: absolute;
     top: 19cm; /* was 14cm */
     left: 2.3cm;
+}.text14 {
+    position: absolute;
+    top: 19cm; /* was 14cm */
+    left: 2.3cm;
+}
+.text16 {
+    position: absolute;
+    top: 18cm; /* was 14cm */
+    left: 6.3cm;
 }
         .font{
             width:max-content;
@@ -145,6 +154,7 @@
     <div class="text13 font" id="text-content13" ></div>
     <div class="text14 font" id="text-content14" ></div>
     <div class="text15 font" id="text-content15" ></div>
+    <div class="text16 font" id="text-content16" ></div>
 
     <!-- Custom Modal Dialog -->
     <div id="myModal" class="modal">
@@ -262,6 +272,9 @@ const subjectName = subject
         document.getElementById('text-content12').textContent = "Class Rank - "+students[currentDocIndex].subject_school_rank;
         document.getElementById('text-content15').textContent = "District Rank - "+students[currentDocIndex].subject_school_rank;
         document.getElementById('text-content13').textContent = "State Rank - "+students[currentDocIndex].subject_overall_rank;            
+        if (p>=90 && classvalue != 'LOWER NURSERY' && classvalue != 'UPPER NURSERY' && classvalue != 'UKG' && classvalue != 'LKG' && classvalue != 'KG' && classvalue != 'NURSERY' && classvalue != 'KIDS'){
+            document.getElementById('text-content16').innerHTML = "<strong>Qualified for National Level</strong>";      
+        }
         document.getElementById('text-content14').textContent = "Date - "+ postDate();            
             // Open print dialog and wait for the user to finish printing
             setTimeout(() => {

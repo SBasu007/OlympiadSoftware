@@ -1773,6 +1773,44 @@ app.get("/viewSchool",(req,res)=>{
   }
 });
 
+app.get("/viewQualification",(req,res)=>{
+  const isAdmin = req.session.isAdmin || false;
+  res.render("./reports/special/Qualification List/viewQualificationList.ejs",{admin:isAdmin})
+ })
+
+ app.post("/printQualificationList", async (req, res) => {
+  const { code, session } = req.body;
+
+  try {
+    const query = `
+      SELECT DISTINCT S.roll, S.name, S.subject
+      FROM student S
+      JOIN marks M ON S.roll = M.roll
+      WHERE S.center_num = $1
+        AND S.session = $2
+        AND M.marks >= 90
+      ORDER BY S.roll ASC
+    `;
+
+    const name = await db.query(
+      "SELECT name FROM school WHERE code = $1",
+      [code]
+    );
+
+    const result = await db.query(query, [code, session]);
+
+    res.render("./reports/special/Qualification List/qualificationList.ejs", {
+      rows: result.rows,
+      session,
+      code,
+      schoolName: name.rows[0]?.name || "School"
+    });
+
+  } catch (error) {
+    console.error("Server error:", error);
+    res.status(500).send("Something went wrong");
+  }
+});
 
 
 app.listen(port, () => {

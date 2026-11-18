@@ -1,0 +1,265 @@
+
+<%
+const rowsPerPage = 24;
+const totalPages = Math.ceil(rows.length / rowsPerPage);
+
+function postDate() {
+    const d = new Date();
+    return d.getDate() + "." + (d.getMonth() + 1) + "." + d.getFullYear();
+}
+
+// Generate email and password from student name
+function getCredentials(fullName, code) {
+    const nameParts = (fullName || "").trim().split(/\s+/).filter(Boolean);
+
+    const firstName = nameParts[0] || "";
+    const lastName = nameParts.length > 1
+        ? nameParts[nameParts.length - 1]
+        : "";
+
+    // Extract numeric school code (e.g. 123/XYZ -> 123)
+    const numericCode = String(code).split("/")[0].trim();
+
+    // Full name without spaces for email
+    const emailName = (fullName || "")
+        .trim()
+        .replace(/\s+/g, "")
+        .toLowerCase();
+    
+    const randomDigit = Math.floor(Math.random() * 10);
+
+    const email = `${emailName}${numericCode}${randomDigit}@gmail.com`;
+
+    const password = `${firstName}${lastName}`.toLowerCase();
+
+    return { email, password };
+}
+%>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Qualification List</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            font-size: 11px;
+        }
+
+        .page {
+            page-break-after: always;
+            position: relative;
+            text-align: center;
+            padding: 20px;
+            min-height: 95vh;
+            box-sizing: border-box;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        h3 {
+            font-size: 15px;
+            margin: 8px 0;
+        }
+
+        .details {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            font-size: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        table, th, td {
+            border: 0.7px solid black;
+        }
+
+        th, td {
+            padding: 8px 5px;
+            text-align: center;
+            font-size: 11px;
+        }
+
+        th {
+            font-weight: bold;
+            background: #eee;
+        }
+
+        .name {
+            text-align: left;
+            width: 22%;
+        }
+
+        .email {
+            width: 27%;
+        }
+
+        .password {
+            width: 20%;
+        }
+
+        .footer {
+            margin-top: 20px;
+            text-align: right;
+            font-size: 11px;
+        }
+
+        .empty {
+            margin-top: 100px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 10mm;
+            }
+
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .page {
+                page-break-after: always;
+                min-height: 0;
+                height: 277mm;
+                padding: 10px;
+            }
+
+            .page:last-child {
+                page-break-after: auto;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+<% if (rows.length === 0) { %>
+
+    <div class="empty">
+        NO QUALIFIED STUDENTS FOUND
+    </div>
+
+<% } %>
+
+<% for (let pageIndex = 0; pageIndex < totalPages; pageIndex++) {
+
+    const start = pageIndex * rowsPerPage;
+    const pageRows = rows.slice(start, start + rowsPerPage);
+
+%>
+
+    <div class="page">
+
+        <h2>QUALIFICATION LIST</h2>
+
+        <h3>
+            <%= schoolName.toUpperCase() %>
+            [Code: <%= code %>]
+        </h3>
+
+        <h3>Session: <%= session %></h3>
+
+        <div class="details">
+
+            <span>
+                Page <%= pageIndex + 1 %> of <%= totalPages %>
+            </span>
+
+            <span>
+                Dated: <%= postDate() %>
+            </span>
+
+        </div>
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Sl. No.</th>
+                    <th>Student Name</th>
+                    <th>Roll No.</th>
+                    <th>Subject</th>
+                    <th class="email">Created Email ID</th>
+                    <th class="password">Password</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <% pageRows.forEach((row, index) => {
+
+                    const credentials = getCredentials(row.name, code);
+
+                %>
+
+                    <tr>
+
+                        <td>
+                            <%= start + index + 1 %>
+                        </td>
+
+                        <td class="name">
+                            <%= row.name %>
+                        </td>
+
+                        <td>
+                            <%= row.roll %>
+                        </td>
+
+                        <td>
+                            <%= row.subject %>
+                        </td>
+
+                        <td>
+                            <%= credentials.email %>
+                        </td>
+
+                        <td>
+                            <%= credentials.password %>
+                        </td>
+
+                    </tr>
+
+                <% }) %>
+
+            </tbody>
+
+        </table>
+
+        <div class="footer">
+            Total Qualified Students: <%= rows.length %>
+        </div>
+
+    </div>
+
+<% } %>
+
+</body>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        window.print();
+    });
+</script>
+
+</html>

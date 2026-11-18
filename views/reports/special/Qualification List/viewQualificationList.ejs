@@ -1,0 +1,216 @@
+
+<%- include("../../../partials/header.ejs") %>
+
+<div class="print-form">
+    <form action="/printQualificationList" method="POST" target="_blank">
+
+        <h5 style="text-align: center; margin-bottom: 20px;">
+            Generate Qualification List
+        </h5>
+
+        <h4 style="text-align: center; margin-bottom: 20px;">
+            Enter School Code and Session
+        </h4>
+
+        <% if (typeof error_message !== 'undefined') { %>
+            <p style="text-align: center; color: red;">
+                <%= error_message %>
+            </p>
+        <% } %>
+
+        <!-- School Code and Session -->
+        <div class="form-row">
+
+            <div class="form-row-element" style="position: relative;">
+                <label class="student-label" for="code">
+                    <strong>School Code:</strong>
+                </label>
+
+                <input
+                    type="text"
+                    id="code"
+                    name="code"
+                    list="code-list"
+                    required
+                    autocomplete="off"
+                >
+
+                <ul id="code-list" class="custom-dropdown-code"></ul>
+            </div>
+
+            <div class="form-row-element">
+                <label class="student-label" for="session">
+                    <strong>Session:</strong>
+                </label>
+
+                <input
+                    type="text"
+                    id="session"
+                    name="session"
+                    required
+                    autocomplete="off"
+                >
+            </div>
+
+        </div>
+
+        <!-- Center Name -->
+        <div class="form-row">
+            <div class="form-row-element">
+                <label class="student-label">CENTER NAME</label>
+                <div class="center-name output"></div>
+            </div>
+        </div>
+
+        <!-- Center Address 1 -->
+        <div class="form-row">
+            <div class="form-row-element">
+                <label class="student-label">CENTER ADDRESS 1</label>
+                <div class="center-add1 output"></div>
+            </div>
+        </div>
+
+        <!-- Center Address 2 -->
+        <div class="form-row">
+            <div class="form-row-element">
+                <label class="student-label">CENTER ADDRESS 2</label>
+                <div class="center-add2 output"></div>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="button-submit">
+            <button
+                type="submit"
+                style="width: 10vw; margin-top: 20px;"
+                class="btn btn-primary"
+            >
+                Print
+            </button>
+        </div>
+
+        <div class="button-submit">
+            <a
+                href="/home"
+                style="width: 10vw; margin-left: 0;"
+                class="btn btn-primary"
+            >
+                Exit
+            </a>
+        </div>
+
+    </form>
+</div>
+
+<script>
+    const codeInput = document.getElementById('code');
+    const codeList = document.getElementById('code-list');
+
+    const nameDiv = document.querySelector('.center-name');
+    const add1Div = document.querySelector('.center-add1');
+    const add2Div = document.querySelector('.center-add2');
+
+    // Fetch school details if code is already filled
+    if (codeInput.value.trim()) {
+        fetchSchoolDetails(codeInput.value.trim());
+    }
+
+    // Fetch matching codes while typing
+    codeInput.addEventListener('input', function () {
+        const query = this.value.trim();
+
+        // Fetch suggestions
+        fetchCodes(query);
+
+        // Fetch school details for the entered code
+        if (query.length > 0) {
+            fetchSchoolDetails(query);
+        } else {
+            resetSchoolDetails();
+        }
+    });
+
+    // Fetch all school codes when input is focused and empty
+    codeInput.addEventListener('focus', function () {
+        if (this.value.trim() === '') {
+            fetchCodes();
+        }
+    });
+
+    // Fetch school codes
+    function fetchCodes(query = '') {
+        fetch(`/getSchoolCodes?query=${encodeURIComponent(query)}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch school codes');
+                }
+
+                return response.json();
+            })
+            .then(data => {
+                codeList.innerHTML = '';
+
+                data.forEach(school => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = school.code;
+
+                    listItem.addEventListener('click', function () {
+                        codeInput.value = school.code;
+                        codeList.style.display = 'none';
+
+                        fetchSchoolDetails(school.code);
+                    });
+
+                    codeList.appendChild(listItem);
+                });
+
+                codeList.style.display =
+                    data.length > 0 ? 'block' : 'none';
+            })
+            .catch(error => {
+                console.error('Error fetching school codes:', error);
+            });
+    }
+
+    // Hide suggestions when clicking outside
+    document.addEventListener('click', function (event) {
+        if (
+            !event.target.closest('#code') &&
+            !event.target.closest('#code-list')
+        ) {
+            codeList.style.display = 'none';
+        }
+    });
+
+    // Fetch school details
+    function fetchSchoolDetails(selectedCode) {
+        fetch(
+            `/getSchoolDetails?code=${encodeURIComponent(selectedCode)}`
+        )
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch school details');
+                }
+
+                return response.json();
+            })
+            .then(data => {
+                nameDiv.textContent = data.name || 'N/A';
+                add1Div.textContent = data.add1 || 'N/A';
+                add2Div.textContent = data.add2 || 'N/A';
+            })
+            .catch(error => {
+                console.error('Error fetching school details:', error);
+                resetSchoolDetails();
+            });
+    }
+
+    // Reset school details
+    function resetSchoolDetails() {
+        nameDiv.textContent = 'N/A';
+        add1Div.textContent = 'N/A';
+        add2Div.textContent = 'N/A';
+    }
+</script>
+
+<%- include("../../../partials/footer.ejs") %>
